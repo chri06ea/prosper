@@ -33,8 +33,6 @@ int main()
         update_gamestate(gs);
 
         render_gamestate(gs, *renderer);
-
-        LOG_INFORMATION(gs.tick_count);
     }
 
     return 0;

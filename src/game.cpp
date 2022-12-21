@@ -7,6 +7,10 @@ namespace prosper
     {
         bool initialize_gamestate(GameState &gs)
         {
+            // Load textures
+
+
+
             return true;
         }
 
@@ -25,6 +29,12 @@ namespace prosper
         void render_gamestate(GameState &gs, platform::Renderer &renderer)
         {
             renderer.draw_sprite();
+
+            auto draw_background = [&]()
+            {
+                static int background_sprite_id = 0;
+                renderer.draw_sprite();
+            };
 
             renderer.swap();
         }
