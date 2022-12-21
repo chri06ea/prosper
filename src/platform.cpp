@@ -263,6 +263,11 @@ namespace prosper
              * Initialize opengl function pointers
              */
 
+            if (!gladLoadGL())
+            {
+                return false;
+            }
+
             return true;
         }
 
@@ -277,11 +282,13 @@ namespace prosper
             }
         }
 
-        class OpenGLRenderer : Renderer
+        class OpenGLRenderer : public Renderer
         {
         public:
             virtual void draw_sprite() override final
             {
+                glClearColor(1.0f, 0.5f, 0.5f, 1.0f);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             }
 
             // switch to backbuffer
@@ -294,7 +301,9 @@ namespace prosper
         Renderer *
         create_renderer()
         {
-            return nullptr;
+            static OpenGLRenderer opengl_renderer;
+
+            return &opengl_renderer;
         }
 
 #endif

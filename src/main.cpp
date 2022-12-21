@@ -19,11 +19,20 @@ int main()
         emergency_shutdown("GameState initialization failed");
     }
 
+    auto renderer = create_renderer();
+
+    if (!renderer)
+    {
+        emergency_shutdown("create_renderer initialization failed");
+    }
+
     while (true)
     {
         process_input();
 
         update_gamestate(gs);
+
+        render_gamestate(gs, *renderer);
 
         LOG_INFORMATION(gs.tick_count);
     }
