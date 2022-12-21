@@ -282,25 +282,24 @@ namespace prosper
             }
         }
 
-        const char *vertexShaderSource = "#version 330 core\n"
-                                         "layout (location = 0) in vec3 aPos;\n"
-                                         "void main()\n"
-                                         "{\n"
-                                         "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-                                         "}\0";
-        const char *fragmentShaderSource = "#version 330 core\n"
-                                           "out vec4 FragColor;\n"
-                                           "void main()\n"
-                                           "{\n"
-                                           "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-                                           "}\n\0";
-
-        class OpenGLRenderer : public Renderer
+        class OpenGLSpriteShader
         {
         public:
+            const char *vertexShaderSource = "#version 330 core\n"
+                                             "layout (location = 0) in vec3 aPos;\n"
+                                             "void main()\n"
+                                             "{\n"
+                                             "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+                                             "}\0";
+            const char *fragmentShaderSource = "#version 330 core\n"
+                                               "out vec4 FragColor;\n"
+                                               "void main()\n"
+                                               "{\n"
+                                               "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+                                               "}\n\0";
+
             void initialize()
             {
-
                 // build and compile our shader program
                 // ------------------------------------
                 // vertex shader
@@ -344,6 +343,23 @@ namespace prosper
                 }
                 glDeleteShader(vertexShader);
                 glDeleteShader(fragmentShader);
+            }
+
+            void use()
+            {
+
+                // draw our first triangle
+                glUseProgram(shaderProgram);
+            }
+            unsigned int shaderProgram;
+        };
+
+        class OpenGLRenderer : public Renderer
+        {
+        public:
+            void initialize()
+            {
+                sprite_shader.initialize();
 
                 // set up vertex data (and buffer(s)) and configure vertex attributes
                 // ------------------------------------------------------------------
@@ -392,11 +408,11 @@ namespace prosper
 
                 // render
                 // ------
+
                 glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
                 glClear(GL_COLOR_BUFFER_BIT);
 
-                // draw our first triangle
-                glUseProgram(shaderProgram);
+                sprite_shader.use();
                 glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
                 // glDrawArrays(GL_TRIANGLES, 0, 6);
                 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -410,7 +426,8 @@ namespace prosper
             }
 
         private:
-            unsigned int shaderProgram, VAO;
+            unsigned int VAO;
+            OpenGLSpriteShader sprite_shader;
         };
 
         Renderer *
