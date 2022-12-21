@@ -294,6 +294,7 @@ namespace prosper
         Renderer *
         create_renderer()
         {
+            return nullptr;
         }
 
 #endif
