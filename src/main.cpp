@@ -1,8 +1,9 @@
 #include "core.hpp"
 #include "game.hpp"
 #include "platform.hpp"
+#include "renderer.hpp"
 
-using namespace prosper::game;
+using namespace prosper;
 using namespace prosper::platform;
 
 int main()

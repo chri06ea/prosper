@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core.hpp"
+#include "renderer.hpp"
 
 namespace prosper
 {
@@ -18,19 +19,8 @@ namespace prosper
         /// @brief process user input (keyboard, mouse, controller, whatever)
         void process_input();
 
-        /// @brief rendering interface
-        class Renderer
-        {
-        public:
-            virtual void draw_sprite() = 0;
-
-            // switch to backbuffer
-            virtual void swap() = 0;
-        };
-
-        /// @brief initializes and returns a rendering interface
-        /// @return render interface ptr
-        Renderer *create_renderer();
+        // switch to backbuffer
+        void swap_buffers();
     }
 }
 
