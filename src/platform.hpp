@@ -24,7 +24,7 @@ namespace prosper
     }
 }
 
-//! NOTE This is to satisfy vscodes intellisense. Delete when more than 1 platform implemented
+//? NOTE This is to satisfy vscodes intellisense. Delete when more than 1 platform implemented
 #ifndef WIN32
 #define WIN32
 #endif

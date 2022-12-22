@@ -6,7 +6,7 @@ namespace prosper
     class Renderer
     {
     public:
-        virtual void draw_sprite() = 0;
+        virtual void draw_sprite(int x, int y) = 0;
     };
 
     Renderer *create_renderer();
