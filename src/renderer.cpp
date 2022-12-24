@@ -59,8 +59,7 @@ namespace prosper
             if (!success)
             {
                 glGetShaderInfoLog(vertex, 512, NULL, infoLog);
-                std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"
-                          << infoLog << std::endl;
+                LOG_ERROR("ERROR::SHADER::VERTEX::COMPILATION_FAILED: " << infoLog);
             };
 
             // fragment Shader
@@ -72,8 +71,7 @@ namespace prosper
             if (!success)
             {
                 glGetShaderInfoLog(fragment, 512, NULL, infoLog);
-                std::cout << "ERROR::SHADER::fragment::COMPILATION_FAILED\n"
-                          << infoLog << std::endl;
+                LOG_ERROR("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED: " << infoLog);
             };
 
             // shader Program
@@ -86,8 +84,7 @@ namespace prosper
             if (!success)
             {
                 glGetProgramInfoLog(ID, 512, NULL, infoLog);
-                std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n"
-                          << infoLog << std::endl;
+                LOG_ERROR("ERROR::SHADER::PROGRAM::COMPILATION_FAILED: " << infoLog);
             }
 
             // delete the shaders as they're linked into our program now and no longer necessary
@@ -117,7 +114,7 @@ namespace prosper
             }
             else
             {
-                std::cout << "Failed to load texture" << std::endl;
+                LOG_ERROR("Failed to load texture");
             }
             stbi_image_free(data);
 
