@@ -164,7 +164,7 @@ namespace prosper
             glEnableVertexAttribArray(2);
         }
 
-        virtual void draw_sprite(int x, int y) override final
+        virtual void draw_sprite(const Sprite &sprite) override final
         {
             glClearColor(1.0f, 0.5f, 0.5f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -177,6 +177,16 @@ namespace prosper
             glBindVertexArray(_vao);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); // glDrawArrays(GL_TRIANGLES, 0, 6);
             // glBindVertexArray(0); // no need to unbind it every time
+        }
+
+        // Sets the projection matrix for the renderer
+        virtual void set_projection(const Mat4 &projection)
+        {
+        }
+
+        // Renders all sprites in the renderer
+        virtual void render()
+        {
         }
 
     private:

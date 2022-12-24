@@ -128,7 +128,9 @@ namespace prosper
 
     void render_gamestate(GameState &gs, Renderer &renderer)
     {
-        renderer.draw_sprite(0, 0);
+        renderer.draw_sprite({});
+
+        renderer.render();
 
         platform::swap_buffers();
     }

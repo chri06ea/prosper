@@ -1,12 +1,27 @@
 #pragma once
 
+#include "math.hpp"
+
 namespace prosper
 {
-    /// @brief rendering interface
+    struct Sprite
+    {
+    };
+
     class Renderer
     {
     public:
-        virtual void draw_sprite(int x, int y) = 0;
+        // Initializes the sprite renderer
+        virtual void init() = 0;
+
+        // Sets the projection matrix for the renderer
+        virtual void set_projection(const Mat4 &projection) = 0;
+
+        // Adds a sprite to the renderer
+        virtual void draw_sprite(const Sprite &sprite) = 0;
+
+        // Renders all sprites in the renderer
+        virtual void render() = 0;
     };
 
     Renderer *create_renderer();
