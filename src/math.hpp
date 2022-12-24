@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 namespace prosper
 {
     template <typename T, int N>
@@ -66,6 +68,25 @@ namespace prosper
         const T &operator[](int index) const
         {
             return elements[index];
+        }
+
+        T Length() const
+        {
+            T lengthSquared = 0;
+            for (int i = 0; i < N; i++)
+            {
+                lengthSquared += elements[i] * elements[i];
+            }
+            return sqrt(lengthSquared);
+        }
+
+        void Normalize()
+        {
+            T length = Length();
+            for (int i = 0; i < N; i++)
+            {
+                elements[i] /= length;
+            }
         }
 
     private:
