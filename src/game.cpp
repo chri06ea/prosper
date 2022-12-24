@@ -102,16 +102,18 @@ namespace prosper
 
                     break;
                 case GameEvent::LostTraveler:
+                {
                     int roll = rand();
 
                     push_ok_reject_notification(
                         {.title = "Lost traveler",
                          .description = "A lost traveler seeks aid",
-                         .callback = [&]() {
-
+                         .callback = [&]()
+                         {
+                             return false;
                          }});
-
-                    break;
+                }
+                break;
                 default:
                     break;
                 }
