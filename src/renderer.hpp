@@ -15,7 +15,7 @@ namespace prosper
         virtual void init() = 0;
 
         // Sets the projection matrix for the renderer
-        virtual void set_projection(const Mat4 &projection) = 0;
+        virtual void set_projection(const Matrix<float, 4> &projection) = 0;
 
         // Adds a sprite to the renderer
         virtual void draw_sprite(const Sprite &sprite) = 0;

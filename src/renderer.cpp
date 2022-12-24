@@ -177,7 +177,7 @@ namespace prosper
         }
 
         // Sets the projection matrix for the renderer
-        virtual void set_projection(const Mat4 &projection)
+        virtual void set_projection(const Matrix<float, 4> &projection)
         {
         }
 
