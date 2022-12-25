@@ -37,9 +37,17 @@ namespace prosper
             return elements[row];
         }
 
-        static Matrix Identity()
+        static Matrix identity()
         {
             return Matrix(1);
+        }
+
+        void translate(const Vector<T, N - 1> &v)
+        {
+            for (int i = 0; i < N - 1; i++)
+            {
+                elements[N - 1][i] = v[i];
+            }
         }
 
     private:
@@ -70,7 +78,7 @@ namespace prosper
             return elements[index];
         }
 
-        T Length() const
+        T length() const
         {
             T lengthSquared = 0;
             for (int i = 0; i < N; i++)
@@ -80,9 +88,9 @@ namespace prosper
             return sqrt(lengthSquared);
         }
 
-        void Normalize()
+        void normalize()
         {
-            T length = Length();
+            T length = length();
             for (int i = 0; i < N; i++)
             {
                 elements[i] /= length;
@@ -91,5 +99,11 @@ namespace prosper
 
     private:
         T elements[N];
+    };
+
+    template <typename T>
+    class Vec2 : public Vector<float, 2>
+    {
+    public:
     };
 }
