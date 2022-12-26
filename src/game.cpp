@@ -128,6 +128,10 @@ namespace prosper
 
     void render_gamestate(GameState &gs, Renderer &renderer)
     {
+        // Draw background
+        renderer.draw_sprite({});
+
+        // Draw 'player'
         renderer.draw_sprite({});
 
         renderer.render();

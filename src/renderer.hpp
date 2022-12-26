@@ -43,7 +43,7 @@ namespace prosper
         virtual void render() = 0;
 
         // Compile a shader source into shader program
-        virtual ShaderProgram compile_shader(const ShaderSource &shader_source) = 0;
+        virtual const ShaderProgram compile_shader(const ShaderSource &shader_source) = 0;
 
         // Use a shader a shader program
         virtual void use_shader_program(const ShaderProgram &shader_program) = 0;
