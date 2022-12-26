@@ -7,7 +7,6 @@
 
 namespace prosper
 {
-
     class OpenGLRenderer : public Renderer
     {
     private:
