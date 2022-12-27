@@ -14,6 +14,8 @@ namespace prosper
         virtual const ShaderProgram compile_shader(const ShaderSource &shader_source) override;
         virtual void use_shader_program(const ShaderProgram &shader_program) override;
 
+        unsigned int load_texture(const void *data, int width, int height, int num_channels);
+
     private:
         unsigned int _vao, _vbo, _ibo, _shader_program;
     };
