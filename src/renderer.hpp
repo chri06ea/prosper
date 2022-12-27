@@ -3,11 +3,18 @@
 #include <math/math.hpp>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace prosper
 {
     struct Sprite
     {
+    };
+
+    // Data for a single vertex. Passed to the gpu
+    struct Vertex
+    {
+        Vector<float, 3> position;
     };
 
     // 'Uncompiled' shader
@@ -27,6 +34,7 @@ namespace prosper
         unsigned int shader_handle;
     };
 
+    // Renderer abstraction.
     class Renderer
     {
     public:
@@ -39,7 +47,8 @@ namespace prosper
         // Adds a sprite to the renderer
         virtual void draw_sprite(const Sprite &sprite) = 0;
 
-        // Renders all sprites in the renderer
+        // TODO leaks implementation details. Do 'begin_frame' and 'end_frame' to abstract this away
+        //  Renders all sprites in the renderer
         virtual void render() = 0;
 
         // Compile a shader source into shader program

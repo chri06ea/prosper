@@ -138,10 +138,10 @@ namespace prosper
             };
             unsigned int VBO, EBO;
             glGenVertexArrays(1, &_vao);
+            glBindVertexArray(_vao);
+
             glGenBuffers(1, &VBO);
             glGenBuffers(1, &EBO);
-
-            glBindVertexArray(_vao);
 
             glBindBuffer(GL_ARRAY_BUFFER, VBO);
             glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);

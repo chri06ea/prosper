@@ -13,5 +13,8 @@ namespace prosper
         virtual void render() override;
         virtual const ShaderProgram compile_shader(const ShaderSource &shader_source) override;
         virtual void use_shader_program(const ShaderProgram &shader_program) override;
+
+    private:
+        unsigned int _vao, _vbo, _ibo, _shader_program;
     };
 }
