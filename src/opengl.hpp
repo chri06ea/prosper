@@ -1,9 +1,20 @@
 #pragma once
 
+#include "window.hpp"
 #include "renderer.hpp"
 
 namespace prosper
 {
+    class OpenGLWindow : public Window
+    {
+    public:
+        virtual void init() override;
+
+        virtual void swap_buffers() override;
+
+    private:
+    };
+
     class OpenGLRenderer : public Renderer
     {
     public:

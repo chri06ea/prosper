@@ -131,9 +131,6 @@ namespace prosper
         // Draw background
         renderer.draw_sprite({});
 
-        // Draw 'player'
-        renderer.draw_sprite({});
-
         renderer.render();
 
         platform::swap_buffers();

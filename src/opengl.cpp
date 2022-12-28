@@ -5,6 +5,21 @@
 
 namespace prosper
 {
+    /*
+     *   OpenGL Window
+     */
+
+    void OpenGLWindow::init()
+    {
+    }
+
+    void OpenGLWindow::swap_buffers()
+    {
+    }
+
+    /*
+     *   OpenGL Renderer
+     */
     // TODO: Query from GPU
     const auto MAX_QUAD_COUNT = 1000u;                                 // Maximum allowed count of quads(gpu can only support so many)
     const auto VERTICIES_PER_QUAD = 4u;                                // A quad require 4 points (upper left, upper right, bottom left, bottom right)
