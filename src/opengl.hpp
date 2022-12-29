@@ -1,31 +1,29 @@
 #pragma once
 
-#include "window.hpp"
-#include "renderer.hpp"
+/*
+ * OpenGL renderer implementation
+ */
+
+#include "platform.hpp"
 
 namespace prosper
 {
-    class OpenGLWindow : public Window
-    {
-    public:
-        virtual void init() override;
-
-        virtual void swap_buffers() override;
-
-    private:
-    };
-
     class OpenGLRenderer : public Renderer
     {
     public:
         virtual void init() override;
-        virtual void set_projection(const Matrix<float, 4> &projection) override;
-        virtual void draw_sprite(const Sprite &sprite) override;
-        virtual void render() override;
-        virtual const ShaderProgram compile_shader(const ShaderSource &shader_source) override;
+
+        virtual void begin_frame() override;
+
+        virtual void end_frame() override;
+
+        virtual void draw() override;
+
+        virtual const ShaderProgram create_shader_program(const ShaderSource &shader_source) override;
+
         virtual void use_shader_program(const ShaderProgram &shader_program) override;
 
-        unsigned int load_texture(const void *data, int width, int height, int num_channels);
+        virtual TextureHandle load_texture(const void *data, int width, int height, int num_channels) override;
 
     private:
         unsigned int _vao, _vbo, _ibo, _shader_program;

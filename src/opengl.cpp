@@ -1,26 +1,10 @@
 #include "opengl.hpp"
 
-#include "core.hpp" // For LOG macros
+#include <stdexcept>
 #include <glad/glad.h>
 
 namespace prosper
 {
-    /*
-     *   OpenGL Window
-     */
-
-    void OpenGLWindow::init()
-    {
-    }
-
-    void OpenGLWindow::swap_buffers()
-    {
-    }
-
-    /*
-     *   OpenGL Renderer
-     */
-    // TODO: Query from GPU
     const auto MAX_QUAD_COUNT = 1000u;                                 // Maximum allowed count of quads(gpu can only support so many)
     const auto VERTICIES_PER_QUAD = 4u;                                // A quad require 4 points (upper left, upper right, bottom left, bottom right)
     const auto INDICIES_PER_QUAD = 6u;                                 // Edges needed to connect a quad. Think of this as 'how many pen strokes would i need to draw this IRL'. In computer graphics, everything is triangles. Each triangles requires 3 pen strokes. A quad consists of two triangles. Therefore 6.
@@ -29,6 +13,9 @@ namespace prosper
 
     void OpenGLRenderer::init()
     {
+        if (!gladLoadGL())
+            throw std::runtime_error("Failed initializing GLAD (OpenGL function pointers)");
+
         // Set up the VAO
         glGenVertexArrays(1, &_vao);
         glBindVertexArray(_vao);
@@ -60,16 +47,10 @@ namespace prosper
         glBindBuffer(GL_ARRAY_BUFFER, _ibo);
         glBufferData(_ibo, sizeof(indicies), indicies, GL_STATIC_DRAW);
     }
-
-    void OpenGLRenderer::set_projection(const Matrix<float, 4> &projection)
+    void OpenGLRenderer::begin_frame()
     {
     }
-
-    void OpenGLRenderer::draw_sprite(const Sprite &sprite)
-    {
-    }
-
-    void OpenGLRenderer::render()
+    void OpenGLRenderer::end_frame()
     {
         // Clear the screen
         glClear(GL_COLOR_BUFFER_BIT);
@@ -82,8 +63,10 @@ namespace prosper
         // Unbind the VAO
         glBindVertexArray(0);
     }
-
-    const ShaderProgram OpenGLRenderer::compile_shader(const ShaderSource &shader_source)
+    void OpenGLRenderer::draw()
+    {
+    }
+    const ShaderProgram OpenGLRenderer::create_shader_program(const ShaderSource &shader_source)
     {
         auto _compile_shader = [](std::string_view shader_source, std::string_view shader_type)
         {
@@ -107,7 +90,7 @@ namespace prosper
             if (!compilation_status)
             {
                 glGetShaderInfoLog(shader, 512, NULL, compilation_log);
-                LOG_ERROR("ERROR::SHADER::COMPILATION_FAILED: " << compilation_log);
+                throw std::runtime_error(compilation_log);
             };
             return shader;
         };
@@ -126,7 +109,7 @@ namespace prosper
         if (!compilation_status)
         {
             glGetProgramInfoLog(program, 512, NULL, compilation_log);
-            LOG_ERROR("ERROR::SHADER::PROGRAM::COMPILATION_FAILED: " << compilation_log);
+            throw std::runtime_error(compilation_log);
         }
         // delete the shaders as they're linked into our program now and no longer necessary
         glDeleteShader(vertex_shader);
@@ -139,7 +122,7 @@ namespace prosper
         glUseProgram(shader_program.shader_handle);
     }
 
-    unsigned int OpenGLRenderer::load_texture(const void *data, int width, int height, int num_channels)
+    TextureHandle OpenGLRenderer::load_texture(const void *data, int width, int height, int num_channels)
     {
         // Generate and bind texture
         unsigned int texture;
@@ -155,4 +138,4 @@ namespace prosper
         glGenerateMipmap(GL_TEXTURE_2D);
         return texture;
     }
-}
+};

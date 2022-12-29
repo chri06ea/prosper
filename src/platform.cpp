@@ -1,22 +1,27 @@
 #include "platform.hpp"
 
+#include <stdexcept>
+#include <win32/win32_window.hpp>
+
 namespace prosper
 {
-    namespace platform
+    Window *create_window(WindowEventHandler event_handler, WindowOptions options)
     {
-#ifdef WIN32
-        /// @brief call when an unrecoverable error happens. will terminate the process
-        /// @param message
-        [[noreturn]] void emergency_shutdown(std::string_view message)
-        {
-            MessageBoxA(NULL, message.data(), "Emergency shutdown", MB_OK);
-
-            exit(-1);
-        }
-        void swap_buffers()
-        {
-            // SwapBuffers(game_dc);
-        }
-#endif
+        return Win32Window::create();
     }
-}
+
+    Renderer *create_renderer(Window *window, RendererType type)
+    {
+        switch (type)
+        {
+        case RendererType::OpenGL:
+        {
+        }
+
+        default:
+        {
+            throw std::underflow_error("invalid/unimplemented renderer type");
+        }
+        }
+    }
+};

@@ -120,10 +120,10 @@ namespace prosper
             throw std::runtime_error("failed DestroyWindow");
     }
 
-    void init_opengl_rendering_context(HDC device_context)
+    void init_opengl_rendering_context_with_wgl(HDC device_context)
     {
         // make sure function pointers are initialized
-        if (!wglCreateContextAttribsARB || wglChoosePixelFormatARB)
+        if (!wglCreateContextAttribsARB || !wglChoosePixelFormatARB)
             init_wgl_function_pointers();
 
         // use wgl to set up pixel format attributes

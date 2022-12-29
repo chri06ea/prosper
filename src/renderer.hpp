@@ -1,12 +1,20 @@
 #pragma once
 
-#include <math/math.hpp>
 #include <string>
-#include <unordered_map>
-#include <vector>
+#include <math/math.hpp>
 
 namespace prosper
 {
+
+    // Supported renders
+    enum class RendererType
+    {
+        OpenGL,
+        // TODO: Vulkan,
+    };
+
+    using TextureHandle = unsigned int;
+
     struct Sprite
     {
     };
@@ -38,25 +46,25 @@ namespace prosper
     class Renderer
     {
     public:
-        // Initializes the sprite renderer
+        // Initializes the renderer
         virtual void init() = 0;
 
-        // Sets the projection matrix for the renderer
-        virtual void set_projection(const Matrix<float, 4> &projection) = 0;
+        // Signals the beginning of the frame. must be called before drawing
+        virtual void begin_frame() = 0;
 
-        // Adds a sprite to the renderer
-        virtual void draw_sprite(const Sprite &sprite) = 0;
+        // Signals the end of the frame. must be called before swapping to back buffer
+        virtual void end_frame() = 0;
 
-        // TODO leaks implementation details. Do 'begin_frame' and 'end_frame' to abstract this away
-        //  Renders all sprites in the renderer
-        virtual void render() = 0;
+        // draw something
+        virtual void draw() = 0;
 
         // Compile a shader source into shader program
-        virtual const ShaderProgram compile_shader(const ShaderSource &shader_source) = 0;
+        virtual const ShaderProgram create_shader_program(const ShaderSource &shader_source) = 0;
 
         // Use a shader a shader program
         virtual void use_shader_program(const ShaderProgram &shader_program) = 0;
-    };
 
-    Renderer *create_renderer();
+        // Load a texture onto the gpu
+        virtual TextureHandle load_texture(const void *data, int width, int height, int num_channels) = 0;
+    };
 }
