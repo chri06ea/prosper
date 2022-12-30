@@ -9,6 +9,9 @@
 #include "window.hpp"
 #include "renderer.hpp"
 
+#include <iostream>
+#define LOG_INFORMATION(x) std::cout << x << std::endl;
+
 namespace prosper
 {
     // Platform independant method for creating a window

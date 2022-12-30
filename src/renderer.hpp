@@ -22,7 +22,7 @@ namespace prosper
     // Data for a single vertex. Passed to the gpu
     struct Vertex
     {
-        Vector<float, 3> position;
+        FVec3 position;
     };
 
     // 'Uncompiled' shader

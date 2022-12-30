@@ -8,6 +8,12 @@ namespace prosper
 
     void process_rendering(GameState &gamestate, Renderer *renderer)
     {
+
+        renderer->begin_frame();
+
+        renderer->draw();
+
+        renderer->end_frame();
     }
 
     void process_tick(GameState &gamestate)

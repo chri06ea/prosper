@@ -31,6 +31,8 @@ int main()
 
         process_tick(gamestate);
 
+        process_rendering(gamestate, renderer);
+
         window->swap_buffers();
     }
 }

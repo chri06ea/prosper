@@ -43,29 +43,40 @@ namespace prosper
             }
         }
 
-    private:
+    protected:
         T elements[N];
     };
 
-    template <typename T>
     class FVec2 : public Vector<float, 2>
     {
     public:
         float &x() { return elements[0]; }
-        const float &x() { return elements[0]; }
+        // const float &x() { return elements[0]; }
         float &y() { return elements[1]; }
-        const float &y() { return elements[1]; }
+        // const float &y() { return elements[1]; }
     };
 
-    template <typename T>
     class FVec3 : public Vector<float, 3>
     {
     public:
+        FVec3()
+        {
+            elements[0] = 0.f;
+            elements[1] = 0.f;
+            elements[2] = 0.f;
+        }
+        FVec3(float x, float y, float z)
+        {
+            elements[0] = x;
+            elements[1] = y;
+            elements[2] = z;
+        }
+
         float &x() { return elements[0]; }
-        const float &x() { return elements[0]; }
+        // const float &x() { return elements[0]; }
         float &y() { return elements[1]; }
-        const float &y() { return elements[1]; }
+        // const float &y() { return elements[1]; }
         float &z() { return elements[0]; }
-        const float &z() { return elements[0]; }
+        // const float &z() { return elements[0]; }
     };
 }

@@ -26,6 +26,9 @@ namespace prosper
         virtual TextureHandle load_texture(const void *data, int width, int height, int num_channels) override;
 
     private:
-        unsigned int _vao, _vbo, _ibo, _shader_program;
+        unsigned int _vao,   // holds vertex attributes
+            _vbo,            // holds the actual vertex data
+            _ebo,            // holds indicies to connect verticies
+            _shader_program; // holds the shader
     };
 }

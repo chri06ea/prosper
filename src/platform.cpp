@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <win32/win32_window.hpp>
+#include <opengl.hpp>
 
 namespace prosper
 {
@@ -16,12 +17,15 @@ namespace prosper
         {
         case RendererType::OpenGL:
         {
-        }
+            static OpenGLRenderer renderer;
 
-        default:
-        {
-            throw std::underflow_error("invalid/unimplemented renderer type");
+            window->init_opengl();
+
+            renderer.init();
+
+            return &renderer;
         }
         }
+        throw std::underflow_error("invalid/unimplemented renderer type");
     }
 };
