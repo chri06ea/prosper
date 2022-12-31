@@ -17,6 +17,7 @@ namespace prosper
 
         virtual void end_frame() override;
 
+<<<<<<< Updated upstream
         virtual void draw() override;
 
         virtual const ShaderProgram create_shader_program(const ShaderSource &shader_source) override;

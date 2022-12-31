@@ -25,6 +25,11 @@ namespace prosper
         FVec3 position;
     };
 
+    struct Mesh
+    {
+        std::array<Vertex, VERTICES_PER_QUAD> vertices;
+    };
+
     // 'Uncompiled' shader
     struct ShaderSource
     {
@@ -56,6 +61,7 @@ namespace prosper
         virtual void end_frame() = 0;
 
         // draw something
+<<<<<<< Updated upstream
         virtual void draw() = 0;
 
         // Compile a shader source into shader program

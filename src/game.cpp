@@ -11,7 +11,32 @@ namespace prosper
 
         renderer->begin_frame();
 
-        renderer->draw();
+        // Draw scenary (pretty much the background)
+
+        renderer->draw({.vertices = {{
+                            {-0.25f, -0.25f, 0.f}, // Bottom left
+                            {0.25f, -0.25f, 0.f},  // Bottom right
+                            {0.25f, 0.25f, 0.f},   // Top right
+                            {-0.25f, 0.25f, 0.f},  // Top left
+                        }}});
+
+        renderer->draw({.vertices = {{
+                            // Top right box
+                            {-0.25f + 0.75f, -0.25f + 0.75f, 0.f}, // Bottom left
+                            {0.25f + 0.75f, -0.25f + 0.75f, 0.f},  // Bottom right
+                            {0.25f + 0.75f, 0.25f + 0.75f, 0.f},   // Top right
+                            {-0.25f + 0.75f, 0.25f + 0.75f, 0.f},  // Top left
+                        }}});
+
+        // Draw sun
+
+        // Draw ground
+
+        // Draw buildings
+
+        // Draw entities
+
+        // Draw overlay things (bottom bar, text, popup etc)
 
         renderer->end_frame();
     }

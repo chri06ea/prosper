@@ -95,6 +95,7 @@ namespace prosper
         _vertices_drawn = 0;
     }
 
+<<<<<<< Updated upstream
     void OpenGLRenderer::draw()
     {
         _vertices[_vertices_drawn + 0] = {
@@ -118,6 +119,9 @@ namespace prosper
                          0.f}};
 
         _vertices_drawn += VERTICES_PER_QUAD;
+    {
+        _vertices.insert(_vertices.end(), std::begin(mesh.vertices), std::end(mesh.vertices));
+>>>>>>> Stashed changes
     }
 
     const ShaderProgram OpenGLRenderer::create_shader_program(const ShaderSource &shader_source)
