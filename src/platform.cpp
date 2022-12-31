@@ -1,5 +1,6 @@
 #include "platform.hpp"
 
+#include <array>
 #include <stdexcept>
 #include <win32/win32_window.hpp>
 #include <opengl.hpp>

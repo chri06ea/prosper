@@ -17,7 +17,7 @@ namespace prosper
 
         virtual void end_frame() override;
 
-        virtual void draw() override;
+        virtual void draw(const std::array<Vertex, VERTICES_PER_QUAD> &vertices) override;
 
         virtual const ShaderProgram create_shader_program(const ShaderSource &shader_source) override;
 
@@ -30,5 +30,7 @@ namespace prosper
             _vbo,            // holds the actual vertex data
             _ebo,            // holds indicies to connect verticies
             _shader_program; // holds the shader
+
+        std::vector<Vertex> _vertices; // The data to be sent to the gpu
     };
 }

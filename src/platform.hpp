@@ -5,6 +5,10 @@
  */
 
 #include <functional>
+#include <vector>
+#include <algorithm>
+#include <array>
+#include <stdexcept>
 
 #include "window.hpp"
 #include "renderer.hpp"
