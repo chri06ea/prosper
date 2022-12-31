@@ -12,21 +12,21 @@ namespace prosper
 
         // Draw scenary (pretty much the background)
 
-        renderer->draw({{
-            // Center box
-            {-0.25f, -0.25f, 0.f}, // Bottom left
-            {0.25f, -0.25f, 0.f},  // Bottom right
-            {0.25f, 0.25f, 0.f},   // Top right
-            {-0.25f, 0.25f, 0.f},  // Top left
-        }});
+        renderer->draw({.vertices = {{
+                            // Center box
+                            {-0.25f, -0.25f, 0.f}, // Bottom left
+                            {0.25f, -0.25f, 0.f},  // Bottom right
+                            {0.25f, 0.25f, 0.f},   // Top right
+                            {-0.25f, 0.25f, 0.f},  // Top left
+                        }}});
 
-        renderer->draw({{
+        renderer->draw({.vertices{{
             // Top right box
             {-0.25f + 0.75f, -0.25f + 0.75f, 0.f}, // Bottom left
             {0.25f + 0.75f, -0.25f + 0.75f, 0.f},  // Bottom right
             {0.25f + 0.75f, 0.25f + 0.75f, 0.f},   // Top right
             {-0.25f + 0.75f, 0.25f + 0.75f, 0.f},  // Top left
-        }});
+        }}});
 
         // Draw sun
 

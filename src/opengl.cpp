@@ -83,9 +83,9 @@ namespace prosper
         GL_CALL(glBindVertexArray(0));
     }
 
-    void OpenGLRenderer::draw(const std::array<Vertex, VERTICES_PER_QUAD> &vertices)
+    void OpenGLRenderer::draw(const Mesh &mesh)
     {
-        _vertices.insert(_vertices.end(), std::begin(vertices), std::end(vertices));
+        _vertices.insert(_vertices.end(), std::begin(mesh.vertices), std::end(mesh.vertices));
     }
 
     const ShaderProgram OpenGLRenderer::create_shader_program(const ShaderSource &shader_source)
