@@ -2,6 +2,8 @@
 
 #include <glad/glad.h>
 
+#include <assets.hpp>
+
 // Wrapper for doing opengl calls, which will also print error (if any)
 #define GL_CALL(CALL)                                  \
     CALL;                                              \
@@ -56,14 +58,26 @@ namespace prosper
         // TODO: Query attribute locations.
         GL_CALL(glEnableVertexAttribArray(0))
         GL_CALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0))
+
+        //* Compile shader
+        _shader_program = create_shader_program(
+                              {
+                                  .vertex_shader_source = spr_vs,
+                                  .fragment_shader_source = spr_fs,
+                              })
+                              .shader_handle;
+
+        // Set the shader. It's alright setting it here, aslong as we only have 1
+        GL_CALL(glUseProgram(_shader_program));
+
         GL_CALL(glBindVertexArray(0));
     }
 
     void OpenGLRenderer::begin_frame()
     {
         // Clear screen
-        // GL_CALL(glClearColor(1.f, 0.f, 1.f, 1.f));
-        // GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
+        GL_CALL(glClearColor(.1f, .1f, .1f, 1.f));
+        GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
 
         // Clear vertices from previous frame
         _vertices.clear();

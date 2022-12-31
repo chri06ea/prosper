@@ -40,7 +40,7 @@ namespace prosper
 
     Win32Window *Win32Window::create()
     {
-        const auto title = "hello";
+        const auto title = "Prosper";
 
         // Setup and create game window class
         WNDCLASSEXA window_class{
