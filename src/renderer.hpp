@@ -41,6 +41,7 @@ namespace prosper
 
     struct Mesh
     {
+        std::array<Vertex, VERTICES_PER_QUAD> vertices;
     };
 
     // 'Uncompiled' shader
@@ -74,7 +75,7 @@ namespace prosper
         virtual void end_frame() = 0;
 
         // draw something
-        virtual void draw(const std::array<Vertex, VERTICES_PER_QUAD> &vertices) = 0;
+        virtual void draw(const Mesh &mesh) = 0;
 
         // Compile a shader source into shader program
         virtual const ShaderProgram create_shader_program(const ShaderSource &shader_source) = 0;

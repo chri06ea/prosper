@@ -17,7 +17,7 @@ namespace prosper
 
         virtual void end_frame() override;
 
-        virtual void draw(const std::array<Vertex, VERTICES_PER_QUAD> &vertices) override;
+        virtual void draw(const Mesh &mesh) override;
 
         virtual const ShaderProgram create_shader_program(const ShaderSource &shader_source) override;
 
