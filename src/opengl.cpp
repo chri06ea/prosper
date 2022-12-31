@@ -119,6 +119,8 @@ namespace prosper
                          0.f}};
 
         _vertices_drawn += VERTICES_PER_QUAD;
+=======
+    void OpenGLRenderer::draw(const Mesh &mesh)
     {
         _vertices.insert(_vertices.end(), std::begin(mesh.vertices), std::end(mesh.vertices));
 >>>>>>> Stashed changes

@@ -19,6 +19,9 @@ namespace prosper
 
 <<<<<<< Updated upstream
         virtual void draw() override;
+=======
+        virtual void draw(const Mesh &mesh) override;
+>>>>>>> Stashed changes
 
         virtual const ShaderProgram create_shader_program(const ShaderSource &shader_source) override;
 

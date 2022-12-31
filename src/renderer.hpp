@@ -63,6 +63,8 @@ namespace prosper
         // draw something
 <<<<<<< Updated upstream
         virtual void draw() = 0;
+        == == == = virtual void draw(const Mesh &mesh) = 0;
+>>>>>>> Stashed changes
 
         // Compile a shader source into shader program
         virtual const ShaderProgram create_shader_program(const ShaderSource &shader_source) = 0;
