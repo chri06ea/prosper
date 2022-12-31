@@ -5,6 +5,11 @@
 
 namespace prosper
 {
+    // A quad require 4 points (upper left, upper right, bottom left, bottom right)
+    const auto VERTICES_PER_QUAD = 4u;
+
+    // Edges needed to connect a quad. Think of this as 'how many pen strokes would i need to draw this IRL'. In computer graphics, everything is triangles. Each triangles requires 3 pen strokes. A quad consists of two triangles. Therefore 6.
+    const auto INDICES_PER_QUAD = 6u;
 
     // Supported renders
     enum class RendererType
@@ -22,6 +27,15 @@ namespace prosper
     // Data for a single vertex. Passed to the gpu
     struct Vertex
     {
+        Vertex()
+        {
+        }
+
+        Vertex(float x, float y, float z)
+        {
+            position = {x, y, z};
+        }
+
         FVec3 position;
     };
 
@@ -61,10 +75,7 @@ namespace prosper
         virtual void end_frame() = 0;
 
         // draw something
-<<<<<<< Updated upstream
-        virtual void draw() = 0;
-        == == == = virtual void draw(const Mesh &mesh) = 0;
->>>>>>> Stashed changes
+        virtual void draw(const Mesh &mesh) = 0;
 
         // Compile a shader source into shader program
         virtual const ShaderProgram create_shader_program(const ShaderSource &shader_source) = 0;

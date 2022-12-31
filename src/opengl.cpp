@@ -1,39 +1,39 @@
 #include "opengl.hpp"
 
-#include <stdexcept>
 #include <glad/glad.h>
+
+// Wrapper for doing opengl calls, which will also print error (if any)
+#define GL_CALL(CALL)                                  \
+    CALL;                                              \
+    if (auto glErr = glGetError(); glErr)              \
+    {                                                  \
+        LOG_INFORMATION(#CALL << " Error: " << glErr); \
+    }
 
 namespace prosper
 {
     const auto MAX_QUAD_COUNT = 1000u;                                // Maximum allowed count of quads(gpu can only support so many)
-    const auto VERTICES_PER_QUAD = 4u;                                // A quad require 4 points (upper left, upper right, bottom left, bottom right)
-    const auto INDICES_PER_QUAD = 6u;                                 // Edges needed to connect a quad. Think of this as 'how many pen strokes would i need to draw this IRL'. In computer graphics, everything is triangles. Each triangles requires 3 pen strokes. A quad consists of two triangles. Therefore 6.
     const auto MAX_VERTEX_COUNT = MAX_QUAD_COUNT * VERTICES_PER_QUAD; // Highest allowed vertex count
     const auto MAX_INDEX_COUNT = MAX_QUAD_COUNT * INDICES_PER_QUAD;   // Each quad is drawn as 2 triangles. To do this, 6 lines is needed (3 for each triangle)
 
-    int _vertices_drawn = 0;
-    Vertex _vertices[MAX_QUAD_COUNT];
-
     void OpenGLRenderer::init()
     {
+
         if (!gladLoadGL())
             throw std::runtime_error("Failed initializing GLAD (OpenGL function pointers)");
 
         //* Setup VAO
-        glGenVertexArrays(1, &_vao);
-        glBindVertexArray(_vao);
-        // TODO: Query attribute locations.
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+        GL_CALL(glGenVertexArrays(1, &_vao));
+        GL_CALL(glBindVertexArray(_vao));
         {
             //* Setup VBO
-            glGenBuffers(1, &_vbo);
-            glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(_vertices), NULL, GL_DYNAMIC_DRAW);
+            GL_CALL(glGenBuffers(1, &_vbo));
+            GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, _vbo));
+            GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * MAX_QUAD_COUNT, NULL, GL_DYNAMIC_DRAW));
 
             //* Setup EBO
-            glGenBuffers(1, &_ebo);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
+            GL_CALL(glGenBuffers(1, &_ebo));
+            GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo));
             static unsigned int indices[MAX_INDEX_COUNT];
             for (size_t indency_index = 0, vertex_index = 0; indency_index < MAX_INDEX_COUNT;
                  indency_index += INDICES_PER_QUAD, vertex_index += VERTICES_PER_QUAD)
@@ -50,80 +50,42 @@ namespace prosper
                 indices[indency_index + 4] = vertex_index + 3; // Notice how indicies are 'reused'
                 indices[indency_index + 5] = vertex_index + 0;
             }
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+            GL_CALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW));
         }
-        glBindVertexArray(0);
-
-        return;
-
-        //* Set up the VAO.
-        // NOTE: The VAO will remember the upcoming buffer bindings
-        glGenVertexArrays(1, &_vao);
-        glBindVertexArray(_vao);
-        glEnableVertexAttribArray(0);
-        // Set up the parameters/input data layout for the shader
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(FVec3), (const void *)offsetof(Vertex, position));
-        //* Set up the VBO
-        glGenBuffers(1, &_vbo);
-        glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-        glBufferData(GL_ARRAY_BUFFER, MAX_VERTEX_COUNT * sizeof(Vertex), nullptr, GL_DYNAMIC_DRAW); // Allocate dynamic vertex buffer
-        //* Set up the IBO
-        glGenBuffers(1, &_ebo);
-        glBindBuffer(GL_ARRAY_BUFFER, _ebo);
-
-        // Put indicies data on GPU. These indicies will never change, so we just define them as GL_STATIC_DRAW
-        // glBufferData(_ebo, sizeof(indices), indices, GL_STATIC_DRAW);
-        // glBindVertexArray(0); // Unbind the vertex array. Not really needed, but we dont want to accidentially modify it outside of this function
+        // Specify VBO data layout. (This has to be done AFTER initializing the vbo. The order of calls)
+        // TODO: Query attribute locations.
+        GL_CALL(glEnableVertexAttribArray(0))
+        GL_CALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0))
+        GL_CALL(glBindVertexArray(0));
     }
 
     void OpenGLRenderer::begin_frame()
     {
-        glClearColor(1.f, 0.f, 1.f, 1.f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        // Clear screen
+        // GL_CALL(glClearColor(1.f, 0.f, 1.f, 1.f));
+        // GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
+
+        // Clear vertices from previous frame
+        _vertices.clear();
+
+        // Preallocate vector
+        _vertices.reserve(MAX_VERTEX_COUNT);
     }
 
     void OpenGLRenderer::end_frame()
     {
         // Bind the VAO.
-        glBindVertexArray(_vao);
+        GL_CALL(glBindVertexArray(_vao));
         // Send vertex data to the GPU. The VAO holds the VBO binding, so we can just copy
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex) * _vertices_drawn, _vertices);
+        GL_CALL(glBufferSubData(GL_ARRAY_BUFFER, 0, _vertices.size() * sizeof(Vertex), _vertices.data()));
         // Draw all vertex data.
-        glDrawElements(GL_TRIANGLES, 8, GL_UNSIGNED_INT, 0); //? It's also possible to draw as GL_QUADS. Not sure what's better.
-        glBindVertexArray(0);
-
-        _vertices_drawn = 0;
+        GL_CALL(glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0)); //? It's also possible to draw as GL_QUADS. Not sure what's better.
+        GL_CALL(glBindVertexArray(0));
     }
 
-<<<<<<< Updated upstream
-    void OpenGLRenderer::draw()
-    {
-        _vertices[_vertices_drawn + 0] = {
-            .position = {-0.5f,
-                         -0.5f,
-                         0.f}};
-
-        _vertices[_vertices_drawn + 1] = {
-            .position = {0.5f,
-                         -0.5f,
-                         0.f}};
-
-        _vertices[_vertices_drawn + 2] = {
-            .position = {0.5f,
-                         0.5f,
-                         0.f}};
-
-        _vertices[_vertices_drawn + 3] = {
-            .position = {-0.5f,
-                         0.5f,
-                         0.f}};
-
-        _vertices_drawn += VERTICES_PER_QUAD;
-=======
     void OpenGLRenderer::draw(const Mesh &mesh)
     {
         _vertices.insert(_vertices.end(), std::begin(mesh.vertices), std::end(mesh.vertices));
->>>>>>> Stashed changes
     }
 
     const ShaderProgram OpenGLRenderer::create_shader_program(const ShaderSource &shader_source)
@@ -198,5 +160,4 @@ namespace prosper
         glGenerateMipmap(GL_TEXTURE_2D);
         return texture;
     }
-
 };

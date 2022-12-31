@@ -17,11 +17,7 @@ namespace prosper
 
         virtual void end_frame() override;
 
-<<<<<<< Updated upstream
-        virtual void draw() override;
-=======
         virtual void draw(const Mesh &mesh) override;
->>>>>>> Stashed changes
 
         virtual const ShaderProgram create_shader_program(const ShaderSource &shader_source) override;
 
@@ -34,5 +30,7 @@ namespace prosper
             _vbo,            // holds the actual vertex data
             _ebo,            // holds indicies to connect verticies
             _shader_program; // holds the shader
+
+        std::vector<Vertex> _vertices; // The data to be sent to the gpu
     };
 }
