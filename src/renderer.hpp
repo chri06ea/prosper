@@ -31,12 +31,18 @@ namespace prosper
         {
         }
 
-        constexpr Vertex(float x, float y, float z)
+        constexpr Vertex(float x, float y, float z, float r, float g, float b, float a)
         {
             position = {x, y, z};
+
+            color[0] = r;
+            color[1] = g;
+            color[2] = b;
+            color[3] = a;
         }
 
         FVec3 position;
+        float color[4];
     };
 
     struct Mesh
@@ -92,7 +98,8 @@ namespace prosper
 
     // @brief Helper function to generate vertex data for a quad
     // Coordinate range is [0, 1], eg generate_quad_vertices(0, 0, 1, 1, ...) for fullscreen
-    constexpr auto generate_quad_vertices = [](float x, float y, float w, float h)
+    constexpr auto generate_quad_vertices = [](float x, float y, float w, float h,
+                                               float r = 1.f, float g = 1.f, float b = 1.f, float a = 1.f)
         -> std::array<Vertex, VERTICES_PER_QUAD>
     {
         // TODO aspect ratio ?
@@ -105,10 +112,10 @@ namespace prosper
         const auto ny1 = ny0 + nh;
         return {
             {
-                {nx0, ny0, 0.f},
-                {nx0, ny1, 0.f},
-                {nx1, ny1, 0.f},
-                {nx1, ny0, 0.f},
+                {nx0, ny0, 0.f, r, g, b, a},
+                {nx0, ny1, 0.f, r, g, b, a},
+                {nx1, ny1, 0.f, r, g, b, a},
+                {nx1, ny0, 0.f, r, g, b, a},
             }};
     };
 }

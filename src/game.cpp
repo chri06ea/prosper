@@ -14,11 +14,19 @@ namespace prosper
         // Draw scenary (pretty much the background)
 
         // Draw sun
-        constexpr auto sun_vertices = generate_quad_vertices(0.1, 0.9, 0.05, 0.05);
+        constexpr auto sun_vertices = generate_quad_vertices(
+            0.1, 0.9, 0.05, 0.05, // Position
+            1, 1, 0, 1            // Color
+        );
+
         renderer->draw({.vertices = sun_vertices});
 
         // Draw ground
-        constexpr auto ground_vertices = generate_quad_vertices(0, 0, 1, 0.2);
+        constexpr auto ground_vertices = generate_quad_vertices(
+            0, 0, 1, 0.2, // Position
+            0, 1, 0, 1    // Color
+        );
+
         renderer->draw({.vertices = ground_vertices});
 
         // Draw buildings
@@ -32,10 +40,10 @@ namespace prosper
 
     void process_tick(GameState &gamestate)
     {
-        // Advance 1 tick
-        gamestate.tick_count++;
-
         // Calculate ingame time
-        gamestate.time = gamestate.tick_count * gamestate.tick_interval;
+        gamestate.simulation_time = (float)(gamestate.platform_tick - gamestate.platform_initial_tick) / (float)gamestate.platform_ticks_per_second;
+
+        // Advance 1 game tick
+        gamestate.simulation_count++;
     }
 }

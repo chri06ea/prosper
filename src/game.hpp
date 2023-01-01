@@ -10,8 +10,10 @@ namespace prosper
 {
     struct GameState
     {
-        // The platform tick the game state was initialized.
-        // This can be used to keep track of time since game started
+        // The current tick count of the platform
+        uint64_t platform_tick{};
+
+        // The platform tick the moment the gamestate was initialized.
         uint64_t platform_initial_tick{};
 
         // The amount of ticks that
@@ -25,6 +27,9 @@ namespace prosper
 
         // The amount of game ticks per second
         uint64_t simulations_per_second{};
+
+        // The time during simulation (calculated from platform ticks)
+        float simulation_time{};
     };
 
     // Create default gamestate

@@ -38,9 +38,8 @@ int main()
     while (true)
     {
         const auto current_tick = get_platform_tick_count();
-        const auto current_time = (float)(current_tick - start_tick) / (float)ticks_per_second;
 
-        LOG_INFORMATION("time " << current_time);
+        gamestate.simulation_time = (float)(current_tick - start_tick) / (float)ticks_per_second;
 
         window->process_messages();
 

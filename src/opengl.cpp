@@ -56,8 +56,10 @@ namespace prosper
         }
         // Specify VBO data layout. (This has to be done AFTER initializing the vbo. The order of calls)
         // TODO: Query attribute locations.
-        GL_CALL(glEnableVertexAttribArray(0))
-        GL_CALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0))
+        GL_CALL(glEnableVertexAttribArray(0)) // Position
+        GL_CALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, position)));
+        GL_CALL(glEnableVertexAttribArray(1)) // Color
+        GL_CALL(glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, color)));
 
         //* Compile shader
         _shader_program = create_shader_program(
