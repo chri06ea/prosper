@@ -8,9 +8,6 @@ using namespace prosper;
 
 int main()
 {
-    LOG_INFORMATION("tick " << get_platform_tick_count());
-    LOG_INFORMATION("ticks per second " << get_platform_ticks_per_second());
-
     prosper::Renderer *renderer{};
     prosper::Window *window{};
 
