@@ -8,6 +8,9 @@ using namespace prosper;
 
 int main()
 {
+    LOG_INFORMATION("tick " << get_platform_tick_count());
+    LOG_INFORMATION("ticks per second " << get_platform_ticks_per_second());
+
     prosper::Renderer *renderer{};
     prosper::Window *window{};
 
@@ -32,8 +35,16 @@ int main()
 
     window->show();
 
+    const auto start_tick = get_platform_tick_count();
+    const auto ticks_per_second = get_platform_ticks_per_second();
+
     while (true)
     {
+        const auto current_tick = get_platform_tick_count();
+        const auto current_time = (float)(current_tick - start_tick) / (float)ticks_per_second;
+
+        LOG_INFORMATION("time " << current_time);
+
         window->process_messages();
 
         process_tick(gamestate);
