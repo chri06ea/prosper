@@ -93,7 +93,7 @@ namespace prosper
         // Send vertex data to the GPU. The VAO holds the VBO binding, so we can just copy
         GL_CALL(glBufferSubData(GL_ARRAY_BUFFER, 0, _vertices.size() * sizeof(Vertex), _vertices.data()));
         // Draw all vertex data.
-        GL_CALL(glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0)); //? It's also possible to draw as GL_QUADS. Not sure what's better.
+        GL_CALL(glDrawElements(GL_TRIANGLES, (_vertices.size() / VERTICES_PER_QUAD) * INDICES_PER_QUAD, GL_UNSIGNED_INT, 0)); //? It's also possible to draw as GL_QUADS. Not sure what's better.
         GL_CALL(glBindVertexArray(0));
     }
 

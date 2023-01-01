@@ -4,14 +4,10 @@ namespace prosper
     class Vector
     {
     public:
-        Vector()
+        constexpr Vector()
         {
-            memset(elements, 0, sizeof(elements));
-        }
-
-        Vector(const T *elements)
-        {
-            memcpy(this->elements, elements, sizeof(this->elements));
+            for (auto &e : elements)
+                e = T{};
         }
 
         T &operator[](int index)
@@ -44,7 +40,7 @@ namespace prosper
         }
 
     protected:
-        T elements[N];
+        T elements[N]{};
     };
 
     class FVec2 : public Vector<float, 2>
@@ -59,13 +55,13 @@ namespace prosper
     class FVec3 : public Vector<float, 3>
     {
     public:
-        FVec3()
+        constexpr FVec3()
         {
             elements[0] = 0.f;
             elements[1] = 0.f;
             elements[2] = 0.f;
         }
-        FVec3(float x, float y, float z)
+        constexpr FVec3(float x, float y, float z)
         {
             elements[0] = x;
             elements[1] = y;

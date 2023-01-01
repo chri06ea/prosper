@@ -2,6 +2,7 @@
 
 namespace prosper
 {
+
     void process_input(GameState &gamestate, Key key, KeyState keystate)
     {
     }
@@ -13,15 +14,12 @@ namespace prosper
         // Draw scenary (pretty much the background)
 
         // Draw sun
+        constexpr auto sun_vertices = generate_quad_vertices(0.1, 0.9, 0.05, 0.05);
+        renderer->draw({.vertices = sun_vertices});
 
         // Draw ground
-
-        renderer->draw({.vertices = {{
-                            {-1.00f, -1.00f, 0.f}, // Bottom left
-                            {+1.00f, -1.00f, 0.f}, // Bottom right
-                            {+1.00f, -0.25f, 0.f}, // Top right
-                            {-1.00f, -0.25f, 0.f}, // Top left
-                        }}});
+        constexpr auto ground_vertices = generate_quad_vertices(0, 0, 1, 0.2);
+        renderer->draw({.vertices = ground_vertices});
 
         // Draw buildings
 

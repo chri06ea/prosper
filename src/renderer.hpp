@@ -27,11 +27,11 @@ namespace prosper
     // Data for a single vertex. Passed to the gpu
     struct Vertex
     {
-        Vertex()
+        constexpr Vertex()
         {
         }
 
-        Vertex(float x, float y, float z)
+        constexpr Vertex(float x, float y, float z)
         {
             position = {x, y, z};
         }
@@ -85,5 +85,26 @@ namespace prosper
 
         // Load a texture onto the gpu
         virtual TextureHandle load_texture(const void *data, int width, int height, int num_channels) = 0;
+    };
+
+    // @brief Helper function to generate vertex data for a quad
+    // Coordinate range is [0, 1], eg generate_quad_vertices(0, 0, 1, 1, ...) for fullscreen
+    constexpr auto generate_quad_vertices = [](float x, float y, float w, float h)
+        -> std::array<Vertex, VERTICES_PER_QUAD>
+    {
+        // Remap coordinates from 0->1 to -1->1
+        const auto nx0 = -1.f + x * 2;
+        const auto ny0 = -1.f + y * 2;
+        const auto nw = w * 2;
+        const auto nh = h * 2;
+        const auto nx1 = nx0 + nw;
+        const auto ny1 = ny0 + nh;
+        return {
+            {
+                {nx0, ny0, 0.f},
+                {nx0, ny1, 0.f},
+                {nx1, ny1, 0.f},
+                {nx1, ny0, 0.f},
+            }};
     };
 }
