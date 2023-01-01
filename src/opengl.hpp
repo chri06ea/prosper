@@ -25,6 +25,8 @@ namespace prosper
 
         virtual TextureHandle load_texture(const void *data, int width, int height, int num_channels) override;
 
+        virtual void on_resize(int width, int height) override;
+
     private:
         unsigned int _vao,   // holds vertex attributes
             _vbo,            // holds the actual vertex data

@@ -9,7 +9,7 @@ namespace prosper
 {
     Window *create_window(WindowEventHandler event_handler, WindowOptions options)
     {
-        return Win32Window::create();
+        return Win32Window::create(event_handler);
     }
 
     Renderer *create_renderer(Window *window, RendererType type)

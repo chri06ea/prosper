@@ -8,6 +8,9 @@ using namespace prosper;
 
 int main()
 {
+    prosper::Renderer *renderer{};
+    prosper::Window *window{};
+
     auto gamestate = create_new_gamestate();
 
     // event handler responsible for forwarding window events to the game layer
@@ -17,11 +20,15 @@ int main()
         {
             process_input(gamestate, context.input.key, context.input.keystate);
         }
+        else if (event == WindowEvent::Resize)
+        {
+            renderer->on_resize(context.resize.width, context.resize.height);
+        }
     };
 
-    auto window = create_window(window_event_handler);
+    window = create_window(window_event_handler);
 
-    auto renderer = create_renderer(window);
+    renderer = create_renderer(window);
 
     window->show();
 

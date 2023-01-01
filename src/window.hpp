@@ -6,7 +6,8 @@ namespace prosper
 {
     enum class WindowEvent
     {
-        Input
+        Input,  // Some button was pressed or released
+        Resize, // Window resized
     };
 
     // Input event data
@@ -32,6 +33,11 @@ namespace prosper
             Key key;
             KeyState keystate;
         } input;
+
+        struct ResizeEvent
+        {
+            int width, height;
+        } resize;
     };
 
     // Called while handling window messages.

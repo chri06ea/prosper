@@ -85,6 +85,9 @@ namespace prosper
 
         // Load a texture onto the gpu
         virtual TextureHandle load_texture(const void *data, int width, int height, int num_channels) = 0;
+
+        //
+        virtual void on_resize(int width, int height) = 0;
     };
 
     // @brief Helper function to generate vertex data for a quad
@@ -92,6 +95,7 @@ namespace prosper
     constexpr auto generate_quad_vertices = [](float x, float y, float w, float h)
         -> std::array<Vertex, VERTICES_PER_QUAD>
     {
+        // TODO aspect ratio ?
         // Remap coordinates from 0->1 to -1->1
         const auto nx0 = -1.f + x * 2;
         const auto ny0 = -1.f + y * 2;

@@ -12,7 +12,7 @@ namespace prosper
     class Win32Window : public Window
     {
     public:
-        static Win32Window *create();
+        static Win32Window *create(WindowEventHandler window_event_handler);
 
         static void destroy(Win32Window *window);
 

@@ -14,6 +14,7 @@ namespace prosper
         {
             HWND window_handle;
             HDC device_context;
+            WindowEventHandler window_event_handler;
         };
 
         std::unordered_map<void *, WindowContext> window_contexts;
@@ -25,6 +26,27 @@ namespace prosper
 
             switch (msg)
             {
+            case WM_SIZE:
+            {
+                RECT client_rect;
+
+                if (!GetClientRect(window, &client_rect))
+                    throw std::runtime_error("Failed getting client rect size");
+
+                const auto width = (client_rect.right - client_rect.left);
+                const auto height = (client_rect.bottom - client_rect.top);
+
+                const auto event_context =
+                    WindowEventContext{
+                        .resize = {
+                            .width = width,
+                            .height = height}};
+
+                window_contexts[window]
+                    .window_event_handler(WindowEvent::Resize, event_context);
+                break;
+            }
+
             default:
                 result = DefWindowProcA(window, msg, wparam, lparam);
                 break;
@@ -38,7 +60,7 @@ namespace prosper
     {
     }
 
-    Win32Window *Win32Window::create()
+    Win32Window *Win32Window::create(WindowEventHandler window_event_handler)
     {
         const auto title = "Prosper";
 
@@ -57,7 +79,7 @@ namespace prosper
         // Create game window
         auto window_handle = CreateWindowExA(0, title, title,
                                              WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
-                                             1200, 800, 0, 0, GetModuleHandle(0), 0);
+                                             800, 800, 0, 0, GetModuleHandle(0), 0);
 
         if (window_handle == NULL)
             throw std::runtime_error("failed creating window");
@@ -70,7 +92,8 @@ namespace prosper
         // Store context
         window_contexts[window_handle] = {
             .window_handle = window_handle,
-            .device_context = device_context};
+            .device_context = device_context,
+            .window_event_handler = window_event_handler};
 
         auto window = new Win32Window();
 

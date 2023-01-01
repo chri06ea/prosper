@@ -78,10 +78,8 @@ namespace prosper
         // Clear screen
         GL_CALL(glClearColor(.1f, .1f, .1f, 1.f));
         GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
-
         // Clear vertices from previous frame
         _vertices.clear();
-
         // Preallocate vector
         _vertices.reserve(MAX_VERTEX_COUNT);
     }
@@ -173,5 +171,10 @@ namespace prosper
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
         return texture;
+    }
+
+    void OpenGLRenderer::on_resize(int width, int height)
+    {
+        glViewport(0, 0, width, height);
     }
 };
