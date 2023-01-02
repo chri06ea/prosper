@@ -10,6 +10,7 @@ int main()
 {
     prosper::Renderer *renderer{};
     prosper::Window *window{};
+    prosper::Sound *sound{};
 
     auto gamestate = create_new_gamestate();
 
@@ -29,6 +30,8 @@ int main()
     window = create_window(window_event_handler);
 
     renderer = create_renderer(window);
+
+    sound = create_sound();
 
     window->show();
 

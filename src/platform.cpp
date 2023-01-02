@@ -3,6 +3,7 @@
 #include <array>
 #include <stdexcept>
 #include <win32/win32_window.hpp>
+#include <win32/win32_sound.hpp>
 #include <opengl.hpp>
 
 namespace prosper
@@ -28,6 +29,11 @@ namespace prosper
         }
         }
         throw std::underflow_error("invalid/unimplemented renderer type");
+    }
+
+    Sound *create_sound()
+    {
+        return Win32Sound::create();
     }
 
     uint64_t get_platform_tick_count()

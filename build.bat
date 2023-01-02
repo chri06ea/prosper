@@ -1,6 +1,6 @@
 @echo off
 
-SET SOURCES=../src/main.cpp ../src/game.cpp ../src/opengl.cpp ../src/platform.cpp ../src/win32/wgl.cpp ../src/win32/win32_window.cpp ../src/glad/glad.c
+SET SOURCES=../src/main.cpp ../src/game.cpp ../src/opengl.cpp ../src/platform.cpp ../src/win32/wgl.cpp ../src/win32/win32_window.cpp ../src/win32/win32_sound.cpp ../src/glad/glad.c
 
 :: ../src/win32_platform.cpp
 

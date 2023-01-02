@@ -12,6 +12,7 @@
 
 #include "window.hpp"
 #include "renderer.hpp"
+#include "sound.hpp"
 
 #include <iostream>
 #define LOG_INFORMATION(x) std::cout << x << std::endl;
@@ -28,6 +29,9 @@ namespace prosper
 
     // Platform independant method for creating a renderer.
     Renderer *create_renderer(Window *window, RendererType type = RendererType::OpenGL);
+
+    // Platform independant method for creating a sound player
+    Sound *create_sound();
 
     // Get the tick count according the machine the game is running on
     uint64_t get_platform_tick_count();
