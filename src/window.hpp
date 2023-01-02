@@ -12,12 +12,12 @@ namespace prosper
 
     // Input event data
 
-    enum Key
+    enum class Key
     {
 
     };
 
-    enum KeyState
+    enum class KeyState
     {
 
     };
