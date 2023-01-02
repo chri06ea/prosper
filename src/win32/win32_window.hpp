@@ -29,6 +29,6 @@ namespace prosper
         Win32Window();
 
         // Handle used to context (Required to reach 'this' in wndproc)
-        void *_context_handle;
+        void *_context_handle{};
     };
 }

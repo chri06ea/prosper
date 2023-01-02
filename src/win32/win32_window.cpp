@@ -84,8 +84,6 @@ namespace prosper
         if (window_handle == NULL)
             throw std::runtime_error("failed creating window");
 
-        // Show it
-
         // Acquire device context
         auto device_context = GetDC(window_handle);
 
@@ -124,9 +122,6 @@ namespace prosper
 
     void Win32Window::swap_buffers()
     {
-        // Not too sure about this.
-        // On OpenGL this call is required (it's a winapi call. kinda same thing on mac and android)
-        // On Vulkan this call is exposed thru the renderer..
         if (!SwapBuffers(window_contexts[_context_handle].device_context))
             throw std::runtime_error("failed SwapBuffers call");
     }

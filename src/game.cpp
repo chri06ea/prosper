@@ -33,6 +33,17 @@ namespace prosper
 
         // Draw entities
 
+        static float p = 0.f;
+        
+        const auto entity_vertices = generate_quad_vertices(
+            p, 0.1f, 0.05f, 0.05f, // Position
+            0.2f, 0.2f, 0.2f, 1.f    // Color
+        );
+
+        p += 0.001;
+
+        renderer->draw({.vertices = entity_vertices});
+
         // Draw overlay things (bottom bar, text, popup etc)
 
         renderer->end_frame();
