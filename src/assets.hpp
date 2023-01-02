@@ -25,3 +25,33 @@ static inline const char *spr_fs = "#version 330 core\n"
                                    "{\n"
                                    "	FragColor = a_color1;  \n"
                                    "}\n";
+
+
+constexpr auto spr_vs2 = R"(
+#version 330 core
+
+layout (location = 0) in vec3 a_pos;
+layout (location = 1) in vec4 a_color;
+
+out vec4 a_color_;
+
+uniform mat4 model;
+uniform mat4 projection;
+
+void main()
+{
+    a_color_ = a_color;
+    gl_Position = projection * model * vec4(a_pos.xy, 0.0, 1.0);
+})";
+
+constexpr auto spr_fs2 = R"(
+#version 330 core
+
+in vec4 a_color_;
+
+out vec4 color;
+
+void main()
+{    
+    color = a_color_;
+})";
