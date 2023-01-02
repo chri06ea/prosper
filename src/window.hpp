@@ -58,8 +58,6 @@ namespace prosper
         virtual void swap_buffers() = 0;
 
         // Initialize opengl rendering context
-        //? this method PROBABLY fits here. initializing a context require a whole lot of platform code
-        //? which is dependant on the windows handle device context etc.
         virtual void init_opengl() = 0;
     };
 }
