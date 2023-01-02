@@ -1,6 +1,5 @@
 #include "wgl.hpp"
 
-#include <stdexcept>
 
 #define WGL_CONTEXT_CORE_PROFILE_BIT_ARB 0x00000001          // Core-profile mode
 #define WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB 0x00000002 // Immediate mode
@@ -52,7 +51,7 @@ namespace prosper
             .lpszClassName = window_class_name};
 
         if (!RegisterClassExA(&window_class))
-            throw std::runtime_error("failed registering window class");
+            CRITICAL_ERROR("failed registering window class");
 
         // create the window
         auto window_handle = CreateWindowExA(0, window_class_name, window_title,
@@ -60,7 +59,7 @@ namespace prosper
                                              1200, 800, 0, 0, app_instance, 0);
 
         if (window_handle == NULL)
-            throw std::runtime_error("failed creating window");
+            CRITICAL_ERROR("failed creating window");
 
         // acquire device context for the window
         auto device_context = GetDC(window_handle);
@@ -82,42 +81,42 @@ namespace prosper
         int pixel_format = ChoosePixelFormat(device_context, &pixel_format_desc);
 
         if (!pixel_format)
-            throw std::runtime_error("ChoosePixelFormat failed");
+            CRITICAL_ERROR("ChoosePixelFormat failed");
 
         if (!SetPixelFormat(device_context, pixel_format, &pixel_format_desc))
-            throw std::runtime_error("SetPixelFormat failed");
+            CRITICAL_ERROR("SetPixelFormat failed");
 
         // create rendering context
         HGLRC rendering_context = wglCreateContext(device_context);
 
         if (!rendering_context)
-            throw std::runtime_error("wglCreateContext failed");
+            CRITICAL_ERROR("wglCreateContext failed");
 
         // set rendering context
         if (!wglMakeCurrent(device_context, rendering_context))
-            throw std::runtime_error("wglMakeCurrent failed");
+            CRITICAL_ERROR("wglMakeCurrent failed");
 
         // initialize the function pointers
         wglCreateContextAttribsARB = (decltype(wglCreateContextAttribsARB))wglGetProcAddress("wglCreateContextAttribsARB");
         if (!wglCreateContextAttribsARB)
-            throw std::runtime_error("failed obtaining wglCreateContextAttribsARB ptr");
+            CRITICAL_ERROR("failed obtaining wglCreateContextAttribsARB ptr");
 
         wglChoosePixelFormatARB = (decltype(wglChoosePixelFormatARB))wglGetProcAddress("wglChoosePixelFormatARB");
         if (!wglChoosePixelFormatARB)
-            throw std::runtime_error("failed obtaining wglCreateContextAttribsARB ptr");
+            CRITICAL_ERROR("failed obtaining wglCreateContextAttribsARB ptr");
 
         // cleanup. now that we have the pointers, we can destroy everything
         if (!wglMakeCurrent(device_context, 0))
-            throw std::runtime_error("failed wglMakeCurrent");
+            CRITICAL_ERROR("failed wglMakeCurrent");
 
         if (!wglDeleteContext(rendering_context))
-            throw std::runtime_error("failed wglDeleteContext");
+            CRITICAL_ERROR("failed wglDeleteContext");
 
         if (!ReleaseDC(window_handle, device_context))
-            throw std::runtime_error("failed ReleaseDC");
+            CRITICAL_ERROR("failed ReleaseDC");
 
         if (!DestroyWindow(window_handle))
-            throw std::runtime_error("failed DestroyWindow");
+            CRITICAL_ERROR("failed DestroyWindow");
     }
 
     void init_opengl_rendering_context_with_wgl(HDC device_context)
@@ -141,16 +140,16 @@ namespace prosper
         int pixel_format;
         UINT num_formats;
         if (!wglChoosePixelFormatARB(device_context, pixel_format_attributes, 0, 1, &pixel_format, &num_formats))
-            throw std::runtime_error("failed wglChoosePixelFormatARB");
+            CRITICAL_ERROR("failed wglChoosePixelFormatARB");
 
         // then use those attributes to get a pixel format descriptor
         PIXELFORMATDESCRIPTOR pixel_format_desc;
         if (!DescribePixelFormat(device_context, pixel_format, sizeof(pixel_format_desc), &pixel_format_desc))
-            throw std::runtime_error("failed DescribePixelFormat");
+            CRITICAL_ERROR("failed DescribePixelFormat");
 
         // now set pixel format
         if (!SetPixelFormat(device_context, pixel_format, &pixel_format_desc))
-            throw std::runtime_error("failed SetPixelFormat");
+            CRITICAL_ERROR("failed SetPixelFormat");
 
         int gl_attributes[] = {
             // major version
@@ -172,10 +171,10 @@ namespace prosper
         auto opengl_rendering_context = wglCreateContextAttribsARB(device_context, 0, gl_attributes);
 
         if (!opengl_rendering_context)
-            throw std::runtime_error("failed wglCreateContextAttribsARB");
+            CRITICAL_ERROR("failed wglCreateContextAttribsARB");
 
         // set the rendering context
         if (!wglMakeCurrent(device_context, opengl_rendering_context))
-            throw std::runtime_error("failed wglMakeCurrent");
+            CRITICAL_ERROR("failed wglMakeCurrent");
     }
 }

@@ -17,6 +17,12 @@
 #include <iostream>
 #define LOG_INFORMATION(x) std::cout << x << std::endl;
 
+#include <Windows.h>
+#define CRITICAL_ERROR(msg)\
+{\
+    MessageBoxA(NULL,msg,"Critical error", MB_OK);\
+}\
+
 namespace prosper
 {
     // Platform independant method for creating a window

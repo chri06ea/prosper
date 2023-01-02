@@ -31,7 +31,7 @@ namespace prosper
                 RECT client_rect;
 
                 if (!GetClientRect(window, &client_rect))
-                    throw std::runtime_error("Failed getting client rect size");
+                    CRITICAL_ERROR("Failed getting client rect size");
 
                 const auto width = (client_rect.right - client_rect.left);
                 const auto height = (client_rect.bottom - client_rect.top);
@@ -74,7 +74,7 @@ namespace prosper
             .lpszClassName = title};
 
         if (!RegisterClassExA(&window_class))
-            throw std::runtime_error("failed registering window class");
+            CRITICAL_ERROR("failed registering window class");
 
         // Create game window
         auto window_handle = CreateWindowExA(0, title, title,
@@ -82,7 +82,7 @@ namespace prosper
                                              800, 800, 0, 0, GetModuleHandle(0), 0);
 
         if (window_handle == NULL)
-            throw std::runtime_error("failed creating window");
+            CRITICAL_ERROR("failed creating window");
 
         // Acquire device context
         auto device_context = GetDC(window_handle);
@@ -123,7 +123,7 @@ namespace prosper
     void Win32Window::swap_buffers()
     {
         if (!SwapBuffers(window_contexts[_context_handle].device_context))
-            throw std::runtime_error("failed SwapBuffers call");
+            CRITICAL_ERROR("failed SwapBuffers call");
     }
 
     void Win32Window::init_opengl()

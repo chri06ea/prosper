@@ -41,7 +41,7 @@ namespace prosper
         LARGE_INTEGER tick_count;
 
         if (!QueryPerformanceCounter(&tick_count))
-            throw std::runtime_error("QueryPerformanceCounter call failed");
+            CRITICAL_ERROR("QueryPerformanceCounter call failed");
 
         return tick_count.QuadPart;
     }
@@ -51,7 +51,7 @@ namespace prosper
         LARGE_INTEGER frequency;
 
         if (!QueryPerformanceFrequency(&frequency))
-            throw std::runtime_error("QueryPerformanceCounter call failed");
+            CRITICAL_ERROR("QueryPerformanceCounter call failed");
 
         return frequency.QuadPart;
     }
