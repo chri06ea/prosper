@@ -101,4 +101,48 @@ namespace prosper
 		static constexpr auto wpos = (projection_matrix * model) * Matrix<float, 1, 4>{400, 200, 0, 1};
 		static_assert(wpos(0, 0) == 0.f && wpos(1, 0) == 0.f);
 	}
+
+
+template <typename T, size_t N>
+struct Vector : Matrix<T, N, 1>
+{
+	constexpr float& x() { return this->fields[0][0]; }
+	constexpr float& y() { return this->fields[1][0]; }
+	constexpr float& z() { return this->fields[2][0]; }
+	constexpr const float& x() const { return this->fields[0][0]; }
+	constexpr const float& y() const { return this->fields[1][0]; }
+	constexpr const float& z() const { return this->fields[2][0]; }
+
+	constexpr T length_sqr() const
+	{
+		T length_squared{};
+		for(int i = 0; i < N; i++)
+			length_squared += this->fields[i][0] * this->fields[i][0];
+		return length_squared;
+	}
+
+	constexpr T length() const
+	{
+		return sqrt(length_sqr());
+	}
+
+	void normalize()
+	{
+		T length = length();
+		for(int i = 0; i < N; i++)
+			this->fields[i][0] /= length;
+	}
+};
+
+template <typename T>
+struct Angle : Matrix<T, 3, 1>
+{
+	float& pitch() { return this->fields[0][0]; }
+	float& yaw() { return this->fields[1][0]; }
+	float& roll() { return this->fields[2][0]; }
+	const float& pitch() const { return this->fields[0][0]; }
+	const float& yaw() const { return   this->fields[1][0]; }
+	const float& roll() const { return  this->fields[2][0]; }
+};
+
 }

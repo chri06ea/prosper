@@ -27,22 +27,8 @@ namespace prosper
 	// Data for a single vertex. Passed to the gpu
 	struct Vertex
 	{
-		constexpr Vertex()
-		{
-		}
-
-		constexpr Vertex(float x, float y, float z, float r, float g, float b, float a)
-		{
-			position = {x, y, z};
-
-			color[0] = r;
-			color[1] = g;
-			color[2] = b;
-			color[3] = a;
-		}
-
-		FVec3 position;
-		float color[4];
+		Vector<float, 3> position;
+		Vector<float, 4> color[4];
 	};
 
 	struct Mesh
@@ -81,16 +67,16 @@ namespace prosper
 		virtual void end_frame() = 0;
 
 		// draw something
-		virtual void draw(const Mesh& mesh) = 0;
+		virtual void draw(const Mesh &mesh) = 0;
 
 		// Compile a shader source into shader program
-		virtual const ShaderProgram create_shader_program(const ShaderSource& shader_source) = 0;
+		virtual const ShaderProgram create_shader_program(const ShaderSource &shader_source) = 0;
 
 		// Use a shader a shader program
-		virtual void use_shader_program(const ShaderProgram& shader_program) = 0;
+		virtual void use_shader_program(const ShaderProgram &shader_program) = 0;
 
 		// Load a texture onto the gpu
-		virtual TextureHandle load_texture(const void* data, int width, int height, int num_channels) = 0;
+		virtual TextureHandle load_texture(const void *data, int width, int height, int num_channels) = 0;
 
 		virtual size_t get_viewport_width() = 0;
 
@@ -98,7 +84,6 @@ namespace prosper
 
 		//
 		virtual void on_resize(int width, int height) = 0;
-
 
 		std::array<float, 2> screen_to_ndc(float x, float y)
 		{
@@ -120,27 +105,20 @@ namespace prosper
 
 			std::array<Vertex, VERTICES_PER_QUAD> vertices{
 				{
-				{top_left[0], top_left[1], 0.f, 1,1,1,1},
-				{top_right[0], top_right[1], 0.f, 1,1,1,1},
-				{bottom_right[0], bottom_right[1], 0.f, 1,1,1,1},
-				{bottom_left[0], bottom_left[1], 0.f, 1,1,1,1},
-				}
-			};
-
+					{{top_left[0], top_left[1], 0.f}, {1, 1, 1, 1}},
+					{{top_right[0], top_right[1], 0.f}, {1, 1, 1, 1}},
+					{{bottom_right[0], bottom_right[1], 0.f}, {1, 1, 1, 1}},
+					{{bottom_left[0], bottom_left[1], 0.f}, {1, 1, 1, 1}},
+				}};
 
 			draw({.vertices = vertices});
 		}
 	};
 
-
-
-	// @brief Helper function to generate vertex data for a quad
-	// Coordinate range is [0, 1], eg generate_quad_vertices(0, 0, 1, 1, ...) for fullscreen
-	constexpr auto generate_quad_vertices = [](float x, float y, float w, float h,
-		float r = 1.f, float g = 1.f, float b = 1.f, float a = 1.f)
-		->std::array<Vertex, VERTICES_PER_QUAD>
+	constexpr auto make_quad_vertices = [](float x, float y, float w, float h,
+										   float r = 1.f, float g = 1.f, float b = 1.f, float a = 1.f)
+		-> std::array<Vertex, VERTICES_PER_QUAD>
 	{
-		// TODO aspect ratio ?
 		// Remap coordinates from 0->1 to -1->1
 		const auto nx0 = -1.f + x * 2;
 		const auto ny0 = -1.f + y * 2;
