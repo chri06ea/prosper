@@ -37,7 +37,7 @@ namespace prosper
 			GL_CALL(glGenBuffers(1, &_ebo));
 			GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo));
 			static unsigned int indices[MAX_INDEX_COUNT];
-			for(size_t indency_index = 0, vertex_index = 0; indency_index < MAX_INDEX_COUNT;
+			for(auto indency_index = 0, vertex_index = 0; indency_index < MAX_INDEX_COUNT;
 				indency_index += INDICES_PER_QUAD, vertex_index += VERTICES_PER_QUAD)
 			{
 				//? 'Indency' is not a real word. However, it refers to the 'index(number) of the index(indices)'
@@ -64,8 +64,8 @@ namespace prosper
 		//* Compile shader
 		_shader_program = create_shader_program(
 			{
-				.vertex_shader_source = spr_vs2,
-				.fragment_shader_source = spr_fs2,
+				.vertex_shader_source = spr_vs,
+				.fragment_shader_source = spr_fs,
 			})
 			.shader_handle;
 
@@ -91,9 +91,9 @@ namespace prosper
 		// Bind the VAO.
 		GL_CALL(glBindVertexArray(_vao));
 		// Send vertex data to the GPU. The VAO holds the VBO binding, so we can just copy
-		GL_CALL(glBufferSubData(GL_ARRAY_BUFFER, 0, _vertices.size() * sizeof(Vertex), _vertices.data()));
+		GL_CALL(glBufferSubData(GL_ARRAY_BUFFER, 0, (GLsizei)_vertices.size() * sizeof(Vertex), _vertices.data()));
 		// Draw all vertex data.
-		GL_CALL(glDrawElements(GL_TRIANGLES, (_vertices.size() / VERTICES_PER_QUAD) * INDICES_PER_QUAD, GL_UNSIGNED_INT, 0)); //? It's also possible to draw as GL_QUADS. Not sure what's better.
+		GL_CALL(glDrawElements(GL_TRIANGLES, (GLsizei)(_vertices.size() / VERTICES_PER_QUAD) * INDICES_PER_QUAD, GL_UNSIGNED_INT, 0)); //? It's also possible to draw as GL_QUADS. Not sure what's better.
 		GL_CALL(glBindVertexArray(0));
 	}
 
@@ -179,6 +179,18 @@ namespace prosper
 
 	void OpenGLRenderer::on_resize(int width, int height)
 	{
+		_viewport_width = width;
+		_viewport_height = height;
 		glViewport(0, 0, width, height);
+	}
+
+	size_t OpenGLRenderer::get_viewport_width()
+	{
+		return _viewport_width;
+	}
+
+	size_t OpenGLRenderer::get_viewport_height()
+	{
+		return _viewport_height;
 	}
 };
