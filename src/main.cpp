@@ -1,7 +1,3 @@
-#include <windows.h>
-#include <stdexcept>
-
-#include "platform.hpp"
 #include "game.hpp"
 
 using namespace prosper;

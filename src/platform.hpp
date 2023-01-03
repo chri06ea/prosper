@@ -10,18 +10,22 @@
 #include <array>
 #include <stdexcept>
 
+// include before windows, since windows headers export stuff like this:
+// #define near 
+#include <math/math.hpp>
+
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
 #include "window.hpp"
 #include "renderer.hpp"
 #include "sound.hpp"
 
 #include <iostream>
+
 #define LOG_INFORMATION(x) std::cout << x << std::endl;
 
-#include <Windows.h>
-#define CRITICAL_ERROR(msg)\
-{\
-    MessageBoxA(NULL,msg,"Critical error", MB_OK);\
-}\
+#define CRITICAL_ERROR(msg) LOG_INFORMATION(msg)
 
 namespace prosper
 {
@@ -44,4 +48,6 @@ namespace prosper
 
     // Amount of ticks per second
     uint64_t get_platform_ticks_per_second();
+
+    
 };
