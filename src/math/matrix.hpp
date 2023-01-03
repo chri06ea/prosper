@@ -23,6 +23,7 @@ namespace prosper
 			return fields[column][row];
 		}
 
+		// Addition overload
 		constexpr const auto operator+(const Matrix<T, Rows, Columns>& rhs) const
 		{
 			Matrix<T, Rows, Columns> result;
@@ -36,6 +37,7 @@ namespace prosper
 			return result;
 		}
 
+		// Multiplication overload
 		template < size_t RhsRows, size_t RhsColumns>
 		constexpr const auto operator*(const Matrix<T, RhsRows, RhsColumns>& rhs) const
 		{
@@ -75,9 +77,9 @@ namespace prosper
 	{
 		return Matrix<float, 4, 4>{
 			2.0f / (right - left), 0.0f, 0.0f, 0.0f, //
-				0.0f, 2.0f / (top - bottom), 0.0f, 0.0f, //
-				0.0f, 0.0f, -2.0f / (far - near), 0.0f,  //
-				-(right + left) / (right - left), -(top + bottom) / (top - bottom), -(far + near) / (far - near), 1.0f, //
+			0.0f, 2.0f / (top - bottom), 0.0f, 0.0f, //
+			0.0f, 0.0f, -2.0f / (far - near), 0.0f,  //
+			-(right + left) / (right - left), -(top + bottom) / (top - bottom), -(far + near) / (far - near), 1.0f, //
 		};
 	};
 
@@ -94,6 +96,7 @@ namespace prosper
 
 	namespace test
 	{
+		//* Orthographic projection example
 		// Try to project screen coords 400, 200 to normalized device coordinates
 
 		static constexpr auto projection_matrix = OrthographicMatrix(0, 800, 0, 400, -1, 1);
@@ -103,46 +106,52 @@ namespace prosper
 	}
 
 
-template <typename T, size_t N>
-struct Vector : Matrix<T, N, 1>
-{
-	constexpr float& x() { return this->fields[0][0]; }
-	constexpr float& y() { return this->fields[1][0]; }
-	constexpr float& z() { return this->fields[2][0]; }
-	constexpr const float& x() const { return this->fields[0][0]; }
-	constexpr const float& y() const { return this->fields[1][0]; }
-	constexpr const float& z() const { return this->fields[2][0]; }
-
-	constexpr T length_sqr() const
+	template <typename T, size_t N>
+	struct Vector : Matrix<T, N, 1>
 	{
-		T length_squared{};
-		for(int i = 0; i < N; i++)
-			length_squared += this->fields[i][0] * this->fields[i][0];
-		return length_squared;
-	}
+		constexpr float& x() { return this->fields[0][0]; }
+		constexpr float& y() { return this->fields[1][0]; }
+		constexpr float& z() { return this->fields[2][0]; }
+		constexpr const float& x() const { return this->fields[0][0]; }
+		constexpr const float& y() const { return this->fields[1][0]; }
+		constexpr const float& z() const { return this->fields[2][0]; }
 
-	constexpr T length() const
+		constexpr T length_sqr() const
+		{
+			T length_squared{};
+			for(int i = 0; i < N; i++)
+				length_squared += this->fields[i][0] * this->fields[i][0];
+			return length_squared;
+		}
+
+		constexpr T length() const
+		{
+			return sqrt(length_sqr());
+		}
+
+		void normalize()
+		{
+			T length = length();
+			for(int i = 0; i < N; i++)
+				this->fields[i][0] /= length;
+		}
+	};
+
+	template <typename T>
+	struct Angle : Matrix<T, 3, 1>
 	{
-		return sqrt(length_sqr());
-	}
-
-	void normalize()
-	{
-		T length = length();
-		for(int i = 0; i < N; i++)
-			this->fields[i][0] /= length;
-	}
-};
-
-template <typename T>
-struct Angle : Matrix<T, 3, 1>
-{
-	float& pitch() { return this->fields[0][0]; }
-	float& yaw() { return this->fields[1][0]; }
-	float& roll() { return this->fields[2][0]; }
-	const float& pitch() const { return this->fields[0][0]; }
-	const float& yaw() const { return   this->fields[1][0]; }
-	const float& roll() const { return  this->fields[2][0]; }
-};
+		float& pitch() { return this->fields[0][0]; }
+		float& yaw() { return this->fields[1][0]; }
+		float& roll() { return this->fields[2][0]; }
+		const float& pitch() const { return this->fields[0][0]; }
+		const float& yaw() const { return   this->fields[1][0]; }
+		const float& roll() const { return  this->fields[2][0]; }
+	};
 
 }
+
+template <typename T>
+struct Rect
+{
+	T x, y, w, h;
+};

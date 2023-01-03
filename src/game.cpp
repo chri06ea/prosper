@@ -11,12 +11,12 @@ namespace prosper
 	{
 		renderer->begin_frame();
 
-		// Draw scenary (pretty much the background)
+		// Draw scenary
 
 		// Draw sun
 
 		// Draw ground
-		renderer->draw_box(500, 500, 50, 50);
+		draw_box(renderer, 500, 500, 50, 50);
 
 		// Draw buildings
 
@@ -33,7 +33,7 @@ namespace prosper
 
 		renderer->draw({.vertices = entity_vertices});
 
-		// Draw overlay things (bottom bar, text, popup etc)
+		// Draw overlay (bottom bar, text, popup etc)
 
 		renderer->end_frame();
 	}

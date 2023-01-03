@@ -40,37 +40,33 @@ namespace prosper
 			for(auto indency_index = 0, vertex_index = 0; indency_index < MAX_INDEX_COUNT;
 				indency_index += INDICES_PER_QUAD, vertex_index += VERTICES_PER_QUAD)
 			{
-				//? 'Indency' is not a real word. However, it refers to the 'index(number) of the index(indices)'
-
 				// 'Connnect' the first triangle
-				indices[indency_index + 0] = vertex_index + 0; // 0-1-2 forms first triangle
+				indices[indency_index + 0] = vertex_index + 0;
 				indices[indency_index + 1] = vertex_index + 1;
 				indices[indency_index + 2] = vertex_index + 2;
 
 				// ... second triangle
-				indices[indency_index + 3] = vertex_index + 2; // 2-3-0 forms second triangle
-				indices[indency_index + 4] = vertex_index + 3; // Notice how indicies are 'reused'
+				indices[indency_index + 3] = vertex_index + 2; 
+				indices[indency_index + 4] = vertex_index + 3;
 				indices[indency_index + 5] = vertex_index + 0;
 			}
 			GL_CALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW));
 		}
 		// Specify VBO data layout. (This has to be done AFTER initializing the vbo. The order of calls)
 		// TODO: Query attribute locations.
-		GL_CALL(glEnableVertexAttribArray(0)) // Position
-			GL_CALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*) offsetof(Vertex, position)));
-		GL_CALL(glEnableVertexAttribArray(1)) // Color
-			GL_CALL(glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*) offsetof(Vertex, color)));
+		GL_CALL(glEnableVertexAttribArray(0)); // Position
+		GL_CALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*) offsetof(Vertex, position)));
+		GL_CALL(glEnableVertexAttribArray(1)); // Color
+		GL_CALL(glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*) offsetof(Vertex, color)));
 
 		//* Compile shader
-		_shader_program = create_shader_program(
+		_shader = create_shader(
 			{
 				.vertex_shader_source = spr_vs,
 				.fragment_shader_source = spr_fs,
-			})
-			.shader_handle;
+			});
 
-		// Set the shader. It's alright setting it here, aslong as we only have 1
-		GL_CALL(glUseProgram(_shader_program));
+		GL_CALL(glUseProgram(_shader));
 
 		GL_CALL(glBindVertexArray(0));
 	}
@@ -91,9 +87,9 @@ namespace prosper
 		// Bind the VAO.
 		GL_CALL(glBindVertexArray(_vao));
 		// Send vertex data to the GPU. The VAO holds the VBO binding, so we can just copy
-		GL_CALL(glBufferSubData(GL_ARRAY_BUFFER, 0, (GLsizei)_vertices.size() * sizeof(Vertex), _vertices.data()));
+		GL_CALL(glBufferSubData(GL_ARRAY_BUFFER, 0, (GLsizei) _vertices.size() * sizeof(Vertex), _vertices.data()));
 		// Draw all vertex data.
-		GL_CALL(glDrawElements(GL_TRIANGLES, (GLsizei)(_vertices.size() / VERTICES_PER_QUAD) * INDICES_PER_QUAD, GL_UNSIGNED_INT, 0)); //? It's also possible to draw as GL_QUADS. Not sure what's better.
+		GL_CALL(glDrawElements(GL_TRIANGLES, (GLsizei) (_vertices.size() / VERTICES_PER_QUAD) * INDICES_PER_QUAD, GL_UNSIGNED_INT, 0)); //? It's also possible to draw as GL_QUADS. Not sure what's better.
 		GL_CALL(glBindVertexArray(0));
 	}
 
@@ -102,7 +98,7 @@ namespace prosper
 		_vertices.insert(_vertices.end(), std::begin(mesh.vertices), std::end(mesh.vertices));
 	}
 
-	const ShaderProgram OpenGLRenderer::create_shader_program(const ShaderSource& shader_source)
+	const Shader OpenGLRenderer::create_shader(const ShaderInfo& shader_source)
 	{
 		auto _compile_shader = [](std::string_view shader_source, std::string_view shader_type)
 		{
@@ -150,14 +146,14 @@ namespace prosper
 		// delete the shaders as they're linked into our program now and no longer necessary
 		glDeleteShader(vertex_shader);
 		glDeleteShader(fragment_shader);
-		return {.shader_handle = program};
+		return {program};
 	}
 
-	void OpenGLRenderer::use_shader_program(const ShaderProgram& shader_program)
+	void OpenGLRenderer::use_shader(const Shader& shader_program)
 	{
-		glUseProgram(shader_program.shader_handle);
+		glUseProgram(shader_program);
 
-		auto model = glGetUniformLocation(shader_program.shader_handle, "model");
+		auto model = glGetUniformLocation(shader_program, "model");
 	}
 
 	TextureHandle OpenGLRenderer::load_texture(const void* data, int width, int height, int num_channels)
@@ -177,20 +173,17 @@ namespace prosper
 		return texture;
 	}
 
-	void OpenGLRenderer::on_resize(int width, int height)
-	{
-		_viewport_width = width;
-		_viewport_height = height;
-		glViewport(0, 0, width, height);
-	}
 
-	size_t OpenGLRenderer::get_viewport_width()
+	void OpenGLRenderer::set_viewport(const Viewport& viewport)
 	{
-		return _viewport_width;
-	}
+		_viewport = viewport;
 
-	size_t OpenGLRenderer::get_viewport_height()
+		glViewport(viewport.x, viewport.y, viewport.w, viewport.h);
+
+	}
+	const Viewport& OpenGLRenderer::get_viewport() const
 	{
-		return _viewport_height;
+		// TODO: insert return statement here
+		return _viewport;
 	}
 };

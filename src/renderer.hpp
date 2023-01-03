@@ -36,8 +36,7 @@ namespace prosper
 		std::array<Vertex, VERTICES_PER_QUAD> vertices;
 	};
 
-	// 'Uncompiled' shader
-	struct ShaderSource
+	struct ShaderInfo
 	{
 		// Source code of the vertex shader
 		std::string vertex_shader_source;
@@ -46,12 +45,9 @@ namespace prosper
 		std::string fragment_shader_source;
 	};
 
-	// 'Compiled' shader
-	struct ShaderProgram
-	{
-		// A handle the the compiled shader
-		unsigned int shader_handle;
-	};
+	using Shader = unsigned int;
+
+	using Viewport = Rect<int>;
 
 	// Renderer abstraction.
 	class Renderer
@@ -67,57 +63,53 @@ namespace prosper
 		virtual void end_frame() = 0;
 
 		// draw something
-		virtual void draw(const Mesh &mesh) = 0;
+		virtual void draw(const Mesh& mesh) = 0;
 
 		// Compile a shader source into shader program
-		virtual const ShaderProgram create_shader_program(const ShaderSource &shader_source) = 0;
+		virtual const Shader create_shader(const ShaderInfo& shader_info) = 0;
 
 		// Use a shader a shader program
-		virtual void use_shader_program(const ShaderProgram &shader_program) = 0;
+		virtual void use_shader(const Shader& shader_program) = 0;
 
 		// Load a texture onto the gpu
-		virtual TextureHandle load_texture(const void *data, int width, int height, int num_channels) = 0;
+		virtual TextureHandle load_texture(const void* data, int width, int height, int num_channels) = 0;
 
-		virtual size_t get_viewport_width() = 0;
+		virtual const Viewport& get_viewport() const = 0;
 
-		virtual size_t get_viewport_height() = 0;
-
-		//
-		virtual void on_resize(int width, int height) = 0;
-
-		std::array<float, 2> screen_to_ndc(float x, float y)
-		{
-			const auto vw = get_viewport_width();
-			const auto vh = get_viewport_height();
-
-			auto projection_matrix = OrthographicMatrix(0, vw, 0, vh, -1, 1);
-			auto model = TranslationMatrix(0, 0, 0);
-			auto ndc = (projection_matrix * model) * Matrix<float, 1, 4>{x, y, 0, 1};
-			return {ndc(0, 0), ndc(1, 0)};
-		}
-
-		void draw_box(float x, float y, float w, float h)
-		{
-			const auto top_left = screen_to_ndc(x, y);
-			const auto top_right = screen_to_ndc(x + w, y);
-			const auto bottom_left = screen_to_ndc(x, y + h);
-			const auto bottom_right = screen_to_ndc(x + w, y + h);
-
-			std::array<Vertex, VERTICES_PER_QUAD> vertices{
-				{
-					{{top_left[0], top_left[1], 0.f}, {1, 1, 1, 1}},
-					{{top_right[0], top_right[1], 0.f}, {1, 1, 1, 1}},
-					{{bottom_right[0], bottom_right[1], 0.f}, {1, 1, 1, 1}},
-					{{bottom_left[0], bottom_left[1], 0.f}, {1, 1, 1, 1}},
-				}};
-
-			draw({.vertices = vertices});
-		}
+		virtual void set_viewport(const Viewport& viewport) = 0;
 	};
 
+
+	inline std::array<float, 2> screen_to_normalized_device_coordinates(const Viewport& viewport, float x, float y)
+	{
+		static const auto model = TranslationMatrix(0.f, 0.f, 0.f);
+		const auto projection_matrix = OrthographicMatrix(0, viewport.w, 0.f, viewport.h, -1.f, 1.f);
+		const auto ndc = (projection_matrix * model) * Matrix<float, 1, 4>{x, y, 0.f, 1.f};
+		return {ndc(0, 0), ndc(1, 0)};
+	}
+
+	inline void draw_box(Renderer* renderer, float x, float y, float w, float h)
+	{
+		const auto viewport = renderer->get_viewport();
+
+		const auto top_left = screen_to_normalized_device_coordinates(viewport, x, y);
+		const auto top_right = screen_to_normalized_device_coordinates(viewport, x + w, y);
+		const auto bottom_left = screen_to_normalized_device_coordinates(viewport, x, y + h);
+		const auto bottom_right = screen_to_normalized_device_coordinates(viewport, x + w, y + h);
+
+		std::array<Vertex, VERTICES_PER_QUAD> vertices{
+			{
+				{{top_left[0], top_left[1], 0.f}, {1, 1, 1, 1}},
+				{{top_right[0], top_right[1], 0.f}, {1, 1, 1, 1}},
+				{{bottom_right[0], bottom_right[1], 0.f}, {1, 1, 1, 1}},
+				{{bottom_left[0], bottom_left[1], 0.f}, {1, 1, 1, 1}},
+			}};
+
+		renderer->draw({.vertices = vertices});
+	}
 	constexpr auto make_quad_vertices = [](float x, float y, float w, float h,
-										   float r = 1.f, float g = 1.f, float b = 1.f, float a = 1.f)
-		-> std::array<Vertex, VERTICES_PER_QUAD>
+		float r = 1.f, float g = 1.f, float b = 1.f, float a = 1.f)
+		->std::array<Vertex, VERTICES_PER_QUAD>
 	{
 		// Remap coordinates from 0->1 to -1->1
 		const auto nx0 = -1.f + x * 2;
