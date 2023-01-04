@@ -42,7 +42,7 @@ namespace prosper
 		static Allocator allocator;
 
 		static BasicDynamicRenderer test_renderer(render_device, allocator);
-		
+
 		test_renderer.render();
 
 		//static QuadRenderer quad_renderer(render_device);
@@ -79,7 +79,7 @@ namespace prosper
 			_platform.get_render_device()->set_viewport({
 				.x = resize.left, .y = resize.top,
 				.w = resize.right - resize.left, .h = resize.bottom - resize.top
-			});
+				});
 		}
 	}
 }

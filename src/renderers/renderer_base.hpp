@@ -16,12 +16,6 @@ namespace prosper
 		{
 			return std::span{(float*) data, this->size};
 		}
-
-		template <typename T>
-		void push(const T& value)
-		{
-			Buffer::push(value);
-		}
 	};
 
 	struct IndexBuffer : DynamicBuffer
@@ -33,14 +27,6 @@ namespace prosper
 		constexpr operator std::span<unsigned int>() const
 		{
 			return std::span{(unsigned int*) data, this->size};
-		}
-
-		template <typename T>
-		void push(const T& value)
-		{
-			count++;
-
-			Buffer::push(value);
 		}
 	};
 
@@ -63,6 +49,8 @@ namespace prosper
 		template <typename ...UInts>
 		inline void push_indices(const UInts& ...values)
 		{
+			indices.count = sizeof...(values);
+
 			(..., indices.push(values));
 		}
 

@@ -91,7 +91,10 @@ namespace prosper
 		// Load a texture onto the gpu
 		virtual GPUTextureHandle load_texture(const Buffer& data, int width, int height, int num_channels) = 0;
 
-
+		// Set information about a vertex attribute / shader parameter
 		virtual void set_vertex_attribute(size_t index, GPUTypeId type_id, size_t num_types) = 0;
+
+		// Clears the viewport
+		virtual void clear(float r, float g, float b, float a) = 0;
 	};
 };

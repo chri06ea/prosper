@@ -110,8 +110,25 @@ namespace prosper
 	{
 		static constexpr size_t default_alloc_size = 64;
 
-		DynamicBuffer(void* buffer, size_t reserve) : Buffer(buffer, reserve) { clear(); }
+		Allocator& allocator;
 
-		DynamicBuffer(Allocator& allocator) : Buffer(allocator.alloc(default_alloc_size), default_alloc_size) { clear(); }
+		DynamicBuffer(Allocator& allocator) : Buffer(allocator.alloc(default_alloc_size), default_alloc_size), allocator(allocator)
+		{
+			clear();
+		}
+
+		// Push a value to the buffer
+		template <typename T>
+		void push(const T& value)
+		{
+			if(size + sizeof(value) > capacity)
+			{
+				capacity *= 2;
+
+				this->data = (unsigned char*) allocator.resize(this->data, capacity);
+			}
+
+			Buffer::push(value);
+		}
 	};
 }

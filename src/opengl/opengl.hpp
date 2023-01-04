@@ -43,6 +43,7 @@ namespace prosper
 
 		virtual void set_vertex_attribute(size_t index, GPUTypeId type_id, size_t num_types) override;
 
+
 	private:
 
 		Viewport _viewport{};
@@ -53,6 +54,9 @@ namespace prosper
 			size_t num_types;
 		};
 
-		std::unordered_map<int, VertexAttributeData> _vertex_attributes;
+		std::unordered_map<size_t, VertexAttributeData> _vertex_attributes;
+
+		// Inherited via RenderDevice
+		virtual void clear(float r, float g, float b, float a) override;
 	};
 }

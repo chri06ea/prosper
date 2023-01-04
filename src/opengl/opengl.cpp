@@ -249,9 +249,16 @@ namespace prosper
 			};
 
 			GL_CALL(glEnableVertexAttribArray(index));
-			GL_CALL(glVertexAttribPointer(index, (GLuint) vertex_attribute.num_types, gl_type_id, GL_FALSE, stride, (const void*) offset));
+			GL_CALL(glVertexAttribPointer(index, (GLuint) vertex_attribute.num_types, gl_type_id, GL_FALSE, (GLuint) stride, (const void*) offset));
 
 			offset += vertex_attribute.num_types * type_size;
 		}
+	}
+
+	void OpenGL::clear(float r, float g, float b, float a)
+	{
+		GL_CALL(glClearColor(r,g,b,a));
+
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
 };

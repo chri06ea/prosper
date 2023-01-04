@@ -6,7 +6,12 @@ namespace prosper
 	{
 		virtual void* alloc(size_t size)
 		{
-			return new unsigned char[size];
+			return malloc(size);
+		}
+
+		virtual void* resize(void* buffer, size_t size)
+		{
+			return realloc(buffer, size);
 		}
 	};
 }

@@ -5,7 +5,7 @@
 namespace prosper {
 
 
-	struct QuadRenderer : RendererBase
+	struct BasicQuadRenderer : RendererBase
 	{
 		static constexpr auto MAX_QUADS = 10000;
 
@@ -16,7 +16,7 @@ namespace prosper {
 		VBO _vbo{};
 		EBO _ebo{};
 
-		QuadRenderer(RenderDevice* render_device, Allocator& allocator) : RendererBase(render_device, allocator)
+		BasicQuadRenderer(RenderDevice* render_device, Allocator& allocator) : RendererBase(render_device, allocator)
 		{
 			_vao = dev->create_vao();
 			_vbo = dev->create_vertex_buffer(MAX_QUADS * VERTICES_PER_QUAD * sizeof(float));
@@ -33,6 +33,7 @@ namespace prosper {
 		// Push a quad to be drawn, when the 'render' method is called
 		void push(int x, int y, int w, int h, const QuadRenderOptions& options = {})
 		{
+
 			// Translate screen coordinates to device coordinates
 			const auto tl = screen_to_normalized_device_coordinates(x, y);
 			const auto tr = screen_to_normalized_device_coordinates(x + w, y);
@@ -54,6 +55,10 @@ namespace prosper {
 		// Render our data
 		void render()
 		{
+			std::array<float, 30> fs;
+
+			memcpy(fs.data(), data.vertices, data.vertices.size);
+
 			dev->bind_vao(_vao);
 			dev->write_buffer(GPUBufferType::VBO, _vbo, data.vertices);
 			dev->write_buffer(GPUBufferType::EBO, _ebo, data.indices);
