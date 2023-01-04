@@ -4,60 +4,76 @@
 
 namespace prosper
 {
-    enum class WindowEvent
-    {
-        Input,  // Some button was pressed or released
-        Resize, // Window resized
-    };
+	enum class WindowEventType
+	{
+		Input,  // Some button was pressed or released
+		Resize, // Window resized
+	};
 
-    // Input event data
+	// Input event data
 
-    enum class Key
-    {
+	enum class Key
+	{
 
-    };
+	};
 
-    enum class KeyState
-    {
+	enum class KeyState
+	{
 
-    };
+	};
 
-    using OnInput = std::function<void(Key, KeyState)>;
+	using OnInput = std::function<void(Key, KeyState)>;
 
-    // Window event context data union
+	// Window event context data union
+	
+	union InputEvent
+	{
+		enum class Type
+		{
+			Key,
+		} type;
 
-    union WindowEventContext
-    {
-        struct InputEvent
-        {
-            Key key;
-            KeyState keystate;
-        } input;
+		union
+		{
+			struct
+			{
+				Key key;
+				KeyState keystate;
+			} key_event;
+		} data;
+	};
 
-        struct ResizeEvent
-        {
-            int width, height;
-        } resize;
-    };
+	struct ResizeEvent
+	{
+		int left, right, top, bottom, width, height;
+	};
 
-    // Called while handling window messages.
+	union WindowEvent
+	{
+		InputEvent input;
+		ResizeEvent resize;
+	};
 
-    using WindowEventHandler = std::function<void(WindowEvent, const WindowEventContext &)>;
+	constexpr auto _sizeof_window_event_context = sizeof(WindowEvent);
 
-    /// Window abstraction
-    class Window
-    {
-    public:
-        // Processes/flushes window messages, and calls appropiate callbacks
-        virtual void process_messages() = 0;
+	// Called while handling window messages.
 
-        // Pops open the window
-        virtual void show() = 0;
+	using WindowEventHandler = std::function<void(WindowEventType, const WindowEvent&)>;
 
-        // Swaps to back buffer
-        virtual void swap_buffers() = 0;
+	/// Window abstraction
+	class Window
+	{
+	public:
+		// Processes/flushes window messages, and calls appropiate callbacks
+		virtual void flush_messages() = 0;
 
-        // Initialize opengl rendering context
-        virtual void init_opengl() = 0;
-    };
+		// Pops open the window
+		virtual void show() = 0;
+
+		// Swaps to back buffer
+		virtual void swap_buffers() = 0;
+
+		// Initialize opengl rendering context
+		virtual void init_opengl() = 0;
+	};
 }

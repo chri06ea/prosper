@@ -8,51 +8,45 @@
 
 namespace prosper
 {
-    Window *create_window(WindowEventHandler event_handler, WindowOptions options)
-    {
-        return Win32Window::create(event_handler);
-    }
+	Window* Platform::create_window(WindowEventHandler event_handler, WindowOptions options)
+	{
+#ifdef WIN32
+		return Win32Window::create(event_handler);
+#endif
+	}
 
-    Renderer *create_renderer(Window *window, RendererType type)
-    {
-        switch (type)
-        {
-        case RendererType::OpenGL:
-        {
-            static OpenGLRenderer renderer;
+	RenderDevice* Platform::get_render_device()
+	{
+		static OpenGL opengl;
+		return &opengl;
+	}
 
-            window->init_opengl();
+	SoundDevice* Platform::get_sound_device()
+	{
+		return nullptr;
+	}
 
-            renderer.init();
+	uint64_t Platform::get_platform_tick_count()
+	{
+#ifdef WIN32
+		LARGE_INTEGER tick_count;
 
-            return &renderer;
-        }
-        }
-        throw std::underflow_error("invalid/unimplemented renderer type");
-    }
+		if(!QueryPerformanceCounter(&tick_count))
+			CRITICAL_ERROR("QueryPerformanceCounter call failed");
 
-    Sound *create_sound()
-    {
-        return Win32Sound::create();
-    }
+		return tick_count.QuadPart;
+#endif
+	}
 
-    uint64_t get_platform_tick_count()
-    {
-        LARGE_INTEGER tick_count;
+	uint64_t Platform::get_platform_ticks_per_second()
+	{
+#ifdef WIN32
+		LARGE_INTEGER frequency;
 
-        if (!QueryPerformanceCounter(&tick_count))
-            CRITICAL_ERROR("QueryPerformanceCounter call failed");
+		if(!QueryPerformanceFrequency(&frequency))
+			CRITICAL_ERROR("QueryPerformanceCounter call failed");
 
-        return tick_count.QuadPart;
-    }
-
-    uint64_t get_platform_ticks_per_second()
-    {
-        LARGE_INTEGER frequency;
-
-        if (!QueryPerformanceFrequency(&frequency))
-            CRITICAL_ERROR("QueryPerformanceCounter call failed");
-
-        return frequency.QuadPart;
-    }
+		return frequency.QuadPart;
+#endif
+	}
 };

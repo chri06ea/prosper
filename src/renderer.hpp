@@ -1,129 +1,165 @@
 #pragma once
 
-#include <string>
-#include <math/math.hpp>
+#include <renderer_base.hpp>
 
 namespace prosper
 {
-	// A quad require 4 points (upper left, upper right, bottom left, bottom right)
-	const auto VERTICES_PER_QUAD = 4u;
-
-	// Edges needed to connect a quad. Think of this as 'how many pen strokes would i need to draw this IRL'. In computer graphics, everything is triangles. Each triangles requires 3 pen strokes. A quad consists of two triangles. Therefore 6.
-	const auto INDICES_PER_QUAD = 6u;
-
-	// Supported renders
-	enum class RendererType
+	// renders some static rendering data
+	struct BasicRenderer : RendererBase
 	{
-		OpenGL,
-		// TODO: Vulkan,
+		VAO _vao{};
+		VBO _vbo{};
+		EBO _ebo{};
+
+		inline static float vertex_data[]{
+
+			// Triangle 1
+			-0.25f,  -0.25f,
+			-0.25f,   0.25f,
+			 0.25f,  -0.25f,
+
+			 // Triangle 2
+			 -0.25f - 0.5f,  -0.25f - 0.5f,
+			 -0.25f - 0.5f,   0.25f - 0.5f,
+			 +0.25f - 0.5f,  -0.25f - 0.5f,
+
+			 // Triangle 3
+			 -0.25f - 0.75f,  -0.25f - 0.75f,
+			 -0.25f - 0.75f,   0.25f - 0.75f,
+			 +0.25f - 0.75f,  -0.25f - 0.75f,
+		};
+
+		inline static int index_data[]{
+			// Triangle 1
+			0, 1, 2,
+			// Triangle 2
+			3, 4, 5,
+			// Triangle 3
+			6, 7, 8
+		};
+
+		BasicRenderer(RenderDevice* render_device) : RendererBase(render_device)
+		{
+			_vao = dev->create_vao();
+
+			_vbo = dev->create_vertex_buffer(sizeof(vertex_data), {
+				.constant = true,
+				.initial_data = vertex_data
+			});
+
+			_ebo = dev->create_index_buffer(sizeof(index_data), {
+				.constant = true,
+				.initial_data = index_data
+			});
+
+			dev->set_vertex_attribute(0, GPUTypeId::Float, 2);
+		}
+
+		void render()
+		{
+			dev->bind_vao(_vao);
+			dev->draw_elements(GPUElementType::Triangle, sizeof(index_data) / sizeof(decltype(*index_data)));
+		}
 	};
 
-	using TextureHandle = unsigned int;
-
-	struct Sprite
+	// renders some dynamic rendering data
+	struct BasicDynamicRenderer : RendererBase
 	{
+		VAO _vao{};
+		VBO _vbo{};
+		EBO _ebo{};
+
+		inline static float vertex_data[]{
+
+			// Triangle 1
+			-0.25f,  -0.25f,
+			-0.25f,   0.25f,
+			 0.25f,  -0.25f,
+		};
+
+		inline static int index_data[]{
+			// Triangle 1
+			0, 1, 2,
+		};
+
+		BasicDynamicRenderer(RenderDevice* render_device) : RendererBase(render_device)
+		{
+			_vao = dev->create_vao();
+
+			_vbo = dev->create_vertex_buffer(sizeof(vertex_data));
+
+			_ebo = dev->create_index_buffer(sizeof(index_data));
+
+			dev->set_vertex_attribute(0, GPUTypeId::Float, 2);
+		}
+
+		void render()
+		{
+			dev->bind_vao(_vao);
+			vertex_data[0] -= 0.001f;
+			vertex_data[1] -= 0.001f;
+			dev->write_buffer(GPUBufferType::VBO, _vbo, vertex_data);
+			dev->write_buffer(GPUBufferType::EBO, _vbo, index_data);
+			dev->draw_elements(GPUElementType::Triangle, sizeof(index_data) / sizeof(decltype(*index_data)));
+		}
 	};
 
-	// Data for a single vertex. Passed to the gpu
-	struct Vertex
+	struct QuadRenderer : RendererBase
 	{
-		Vector<float, 3> position;
-		Vector<float, 4> color[4];
-	};
+		static constexpr auto MAX_QUADS = 10000;
 
-	struct Mesh
-	{
-		std::array<Vertex, VERTICES_PER_QUAD> vertices;
-	};
+		static constexpr auto VERTICES_PER_QUAD = 4u;
+		static constexpr auto INDICES_PER_QUAD = 6u;
 
-	struct ShaderInfo
-	{
-		// Source code of the vertex shader
-		std::string vertex_shader_source;
+		VAO _vao{};
+		VBO _vbo{};
+		EBO _ebo{};
 
-		// Source code of the fragment shader
-		std::string fragment_shader_source;
-	};
+		QuadRenderer(RenderDevice* render_device) : RendererBase(render_device)
+		{
+			_vao = dev->create_vao();
+			_vbo = dev->create_vertex_buffer(MAX_QUADS * VERTICES_PER_QUAD * sizeof(float));
+			_ebo = dev->create_index_buffer(MAX_QUADS * INDICES_PER_QUAD * sizeof(unsigned int));
 
-	using Shader = unsigned int;
+			dev->set_vertex_attribute(0, GPUTypeId::Float, 3);
+		}
 
-	using Viewport = Rect<int>;
+		struct QuadRenderOptions
+		{
+			Color<float> color_modulation{1.f,1.f,1.f,1.f};
+		};
 
-	// Renderer abstraction.
-	class Renderer
-	{
-	public:
-		// Initializes the renderer
-		virtual void init() = 0;
+		// Push a quad to be drawn, when the 'render' method is called
+		void push(int x, int y, int w, int h, const QuadRenderOptions& options = {})
+		{
+			// Translate screen coordinates to device coordinates
+			const auto tl = screen_to_normalized_device_coordinates(x, y);
+			const auto tr = screen_to_normalized_device_coordinates(x + w, y);
+			const auto bl = screen_to_normalized_device_coordinates(x, y + h);
+			const auto br = screen_to_normalized_device_coordinates(x + w, y + h);
 
-		// Signals the beginning of the frame. must be called before drawing
-		virtual void begin_frame() = 0;
+			// Push vertex data
+			data.push_vertex(tl.x(), tl.y(), 0.f); // options.color_modulation);
+			data.push_vertex(tr.x(), tr.y(), 0.f); // options.color_modulation);
+			data.push_vertex(bl.x(), bl.y(), 0.f); // options.color_modulation);
+			data.push_vertex(br.x(), br.y(), 0.f); // options.color_modulation);
 
-		// Signals the end of the frame. must be called before swapping to back buffer
-		virtual void end_frame() = 0;
+			// Push index data
+			const auto index_offset = data.indices.count * INDICES_PER_QUAD;
+			data.push_indices(0 + index_offset, 1 + index_offset, 2 + index_offset);
+			data.push_indices(2 + index_offset, 3 + index_offset, 0 + index_offset);
+		}
 
-		// draw something
-		virtual void draw(const Mesh& mesh) = 0;
+		// Render our data
+		void render()
+		{
+			dev->bind_vao(_vao);
+			dev->write_buffer(GPUBufferType::VBO, _vbo, data.vertices);
+			dev->write_buffer(GPUBufferType::EBO, _ebo, data.indices);
+			dev->draw_elements(GPUElementType::Triangle, data.indices.count);
 
-		// Compile a shader source into shader program
-		virtual const Shader create_shader(const ShaderInfo& shader_info) = 0;
-
-		// Use a shader a shader program
-		virtual void use_shader(const Shader& shader_program) = 0;
-
-		// Load a texture onto the gpu
-		virtual TextureHandle load_texture(const void* data, int width, int height, int num_channels) = 0;
-
-		virtual const Viewport& get_viewport() const = 0;
-
-		virtual void set_viewport(const Viewport& viewport) = 0;
-	};
-
-
-	inline std::array<float, 2> screen_to_normalized_device_coordinates(const Viewport& viewport, float x, float y)
-	{
-		static const auto model = TranslationMatrix(0.f, 0.f, 0.f);
-		const auto projection_matrix = OrthographicMatrix(0, viewport.w, 0.f, viewport.h, -1.f, 1.f);
-		const auto ndc = (projection_matrix * model) * Matrix<float, 1, 4>{x, y, 0.f, 1.f};
-		return {ndc(0, 0), ndc(1, 0)};
-	}
-
-	inline void draw_box(Renderer* renderer, float x, float y, float w, float h)
-	{
-		const auto viewport = renderer->get_viewport();
-
-		const auto top_left = screen_to_normalized_device_coordinates(viewport, x, y);
-		const auto top_right = screen_to_normalized_device_coordinates(viewport, x + w, y);
-		const auto bottom_left = screen_to_normalized_device_coordinates(viewport, x, y + h);
-		const auto bottom_right = screen_to_normalized_device_coordinates(viewport, x + w, y + h);
-
-		std::array<Vertex, VERTICES_PER_QUAD> vertices{
-			{
-				{{top_left[0], top_left[1], 0.f}, {1, 1, 1, 1}},
-				{{top_right[0], top_right[1], 0.f}, {1, 1, 1, 1}},
-				{{bottom_right[0], bottom_right[1], 0.f}, {1, 1, 1, 1}},
-				{{bottom_left[0], bottom_left[1], 0.f}, {1, 1, 1, 1}},
-			}};
-
-		renderer->draw({.vertices = vertices});
-	}
-	constexpr auto make_quad_vertices = [](float x, float y, float w, float h,
-		float r = 1.f, float g = 1.f, float b = 1.f, float a = 1.f)
-		->std::array<Vertex, VERTICES_PER_QUAD>
-	{
-		// Remap coordinates from 0->1 to -1->1
-		const auto nx0 = -1.f + x * 2;
-		const auto ny0 = -1.f + y * 2;
-		const auto nw = w * 2;
-		const auto nh = h * 2;
-		const auto nx1 = nx0 + nw;
-		const auto ny1 = ny0 + nh;
-		return {
-			{
-				{nx0, ny0, 0.f, r, g, b, a},
-				{nx0, ny1, 0.f, r, g, b, a},
-				{nx1, ny1, 0.f, r, g, b, a},
-				{nx1, ny0, 0.f, r, g, b, a},
-			}};
+			// Clear the cpu-side buffers
+			data.clear();
+		}
 	};
 }

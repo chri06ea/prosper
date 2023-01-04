@@ -4,7 +4,7 @@ namespace prosper
 {
     void sound_test();
 
-    class Win32Sound : public Sound
+    class Win32Sound : public SoundDevice
     {
     public:
         static Win32Sound *create();

@@ -16,7 +16,7 @@ namespace prosper
 
         static void destroy(Win32Window *window);
 
-        virtual void process_messages() override;
+        virtual void flush_messages() override;
 
         virtual void show() override;
 

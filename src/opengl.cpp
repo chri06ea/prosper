@@ -1,8 +1,7 @@
 #include "opengl.hpp"
 
-#include <glad/glad.h>
-
 #include <assets.hpp>
+#include <glad/glad.h>
 
 // Wrapper for doing opengl calls, which will also print error (if any)
 #define GL_CALL(CALL)                                  \
@@ -14,91 +13,125 @@
 
 namespace prosper
 {
-	const auto MAX_QUAD_COUNT = 1000u;                                // Maximum allowed count of quads(gpu can only support so many)
-	const auto MAX_VERTEX_COUNT = MAX_QUAD_COUNT * VERTICES_PER_QUAD; // Highest allowed vertex count
-	const auto MAX_INDEX_COUNT = MAX_QUAD_COUNT * INDICES_PER_QUAD;   // Each quad is drawn as 2 triangles. To do this, 6 lines is needed (3 for each triangle)
-
-	void OpenGLRenderer::init()
+	OpenGL::OpenGL()
 	{
+		if(gladLoadGL() != 0)
+			CRITICAL_ERROR("Glad init failed");
+	}
 
-		if(!gladLoadGL())
-			CRITICAL_ERROR("Failed initializing GLAD (OpenGL function pointers)");
+	VAO OpenGL::create_vao()
+	{
+		VAO vao;
+		GL_CALL(glGenVertexArrays(1, &vao));
+		bind_vao(vao);
+		return vao;
+	}
 
-		//* Setup VAO
-		GL_CALL(glGenVertexArrays(1, &_vao));
-		GL_CALL(glBindVertexArray(_vao));
+	void OpenGL::bind_vao(VAO vao)
+	{
+		GL_CALL(glBindVertexArray(vao));
+	}
+
+	VBO OpenGL::create_vertex_buffer(size_t size, const GPUBufferOptions& options)
+	{
+		VBO vbo;
+		GL_CALL(glGenBuffers(1, &vbo));
+		GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+		GL_CALL(glBufferData(GL_ARRAY_BUFFER, size, options.initial_data, options.constant ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW));
+		return vbo;
+	}
+
+	EBO OpenGL::create_index_buffer(size_t size, const GPUBufferOptions& options)
+	{
+		EBO ebo;
+		GL_CALL(glGenBuffers(1, &ebo));
+		GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo));
+		GL_CALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, options.initial_data, options.constant ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW));
+		return ebo;
+	}
+
+	void OpenGL::bind_buffer(GPUBufferType type, GPUBufferHandle buffer)
+	{
+		uint16_t gl_buffer_type{};
+
+		switch(type)
 		{
-			//* Setup VBO
-			GL_CALL(glGenBuffers(1, &_vbo));
-			GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, _vbo));
-			GL_CALL(glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * MAX_QUAD_COUNT, NULL, GL_DYNAMIC_DRAW));
-
-			//* Setup EBO
-			GL_CALL(glGenBuffers(1, &_ebo));
-			GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo));
-			static unsigned int indices[MAX_INDEX_COUNT];
-			for(auto indency_index = 0, vertex_index = 0; indency_index < MAX_INDEX_COUNT;
-				indency_index += INDICES_PER_QUAD, vertex_index += VERTICES_PER_QUAD)
+			case GPUBufferType::VBO:
 			{
-				// 'Connnect' the first triangle
-				indices[indency_index + 0] = vertex_index + 0;
-				indices[indency_index + 1] = vertex_index + 1;
-				indices[indency_index + 2] = vertex_index + 2;
-
-				// ... second triangle
-				indices[indency_index + 3] = vertex_index + 2; 
-				indices[indency_index + 4] = vertex_index + 3;
-				indices[indency_index + 5] = vertex_index + 0;
+				gl_buffer_type = GL_ARRAY_BUFFER;
+				break;
 			}
-			GL_CALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW));
-		}
-		// Specify VBO data layout. (This has to be done AFTER initializing the vbo. The order of calls)
-		// TODO: Query attribute locations.
-		GL_CALL(glEnableVertexAttribArray(0)); // Position
-		GL_CALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*) offsetof(Vertex, position)));
-		GL_CALL(glEnableVertexAttribArray(1)); // Color
-		GL_CALL(glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*) offsetof(Vertex, color)));
-
-		//* Compile shader
-		_shader = create_shader(
+			case GPUBufferType::EBO:
 			{
-				.vertex_shader_source = spr_vs,
-				.fragment_shader_source = spr_fs,
-			});
+				gl_buffer_type = GL_ELEMENT_ARRAY_BUFFER;
+				break;
+			}
+			default: CRITICAL_ERROR("Invalid buffer type");
+		}
 
-		GL_CALL(glUseProgram(_shader));
-
-		GL_CALL(glBindVertexArray(0));
+		GL_CALL(glBindBuffer(gl_buffer_type, buffer));
 	}
 
-	void OpenGLRenderer::begin_frame()
+	void OpenGL::unbind_buffer(GPUBufferType type)
 	{
-		// Clear screen
-		GL_CALL(glClearColor(.1f, .1f, .1f, 1.f));
-		GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
-		// Clear vertices from previous frame
-		_vertices.clear();
-		// Preallocate vector
-		_vertices.reserve(MAX_VERTEX_COUNT);
+		bind_buffer(type, 0);
 	}
 
-	void OpenGLRenderer::end_frame()
+	void OpenGL::write_buffer(GPUBufferType type, GPUBufferHandle buffer, const Buffer& data)
 	{
-		// Bind the VAO.
-		GL_CALL(glBindVertexArray(_vao));
-		// Send vertex data to the GPU. The VAO holds the VBO binding, so we can just copy
-		GL_CALL(glBufferSubData(GL_ARRAY_BUFFER, 0, (GLsizei) _vertices.size() * sizeof(Vertex), _vertices.data()));
-		// Draw all vertex data.
-		GL_CALL(glDrawElements(GL_TRIANGLES, (GLsizei) (_vertices.size() / VERTICES_PER_QUAD) * INDICES_PER_QUAD, GL_UNSIGNED_INT, 0)); //? It's also possible to draw as GL_QUADS. Not sure what's better.
-		GL_CALL(glBindVertexArray(0));
+		uint16_t gl_buffer_type{};
+
+		switch(type)
+		{
+			case GPUBufferType::VBO:
+			{
+				gl_buffer_type = GL_ARRAY_BUFFER;
+				break;
+			}
+			case GPUBufferType::EBO:
+			{
+				gl_buffer_type = GL_ELEMENT_ARRAY_BUFFER;
+				break;
+			}
+			default: CRITICAL_ERROR("Invalid buffer type");
+		};
+
+		const void* d = data;
+		const size_t size = data.size();
+
+		GL_CALL(glBufferSubData(gl_buffer_type, 0, (GLsizei) data.size(), data));
 	}
 
-	void OpenGLRenderer::draw(const Mesh& mesh)
+	void OpenGL::draw_elements(GPUElementType type, size_t indices_count)
 	{
-		_vertices.insert(_vertices.end(), std::begin(mesh.vertices), std::end(mesh.vertices));
+		uint16_t gl_element_type{};
+
+		switch(type)
+		{
+			case GPUElementType::Triangle:
+			{
+				gl_element_type = GL_TRIANGLES;
+				break;
+			}
+			default: CRITICAL_ERROR("Invalid element type");
+		};
+
+		GL_CALL(glDrawElements(gl_element_type, (GLsizei) indices_count, GL_UNSIGNED_INT, 0));
 	}
 
-	const Shader OpenGLRenderer::create_shader(const ShaderInfo& shader_source)
+	const Viewport& OpenGL::get_viewport() const
+	{
+		return _viewport;
+	}
+	void OpenGL::set_viewport(const Viewport& viewport)
+	{
+		_viewport = viewport;
+
+		GL_CALL(glViewport(viewport.x, viewport.y, viewport.w, viewport.h));
+
+	}
+
+	const Shader OpenGL::create_shader(const ShaderSource& shader_source)
 	{
 		auto _compile_shader = [](std::string_view shader_source, std::string_view shader_type)
 		{
@@ -113,15 +146,15 @@ namespace prosper
 			// Compile that shit
 			const auto source = shader_source.data();
 			const auto shader = glCreateShader(shader_type_id);
-			glShaderSource(shader, 1, &source, NULL);
-			glCompileShader(shader);
+			GL_CALL(glShaderSource(shader, 1, &source, NULL));
+			GL_CALL(glCompileShader(shader));
 			// Error checking
 			int compilation_status;
 			char compilation_log[512];
-			glGetShaderiv(shader, GL_COMPILE_STATUS, &compilation_status);
+			GL_CALL(glGetShaderiv(shader, GL_COMPILE_STATUS, &compilation_status));
 			if(!compilation_status)
 			{
-				glGetShaderInfoLog(shader, 512, NULL, compilation_log);
+				GL_CALL(glGetShaderInfoLog(shader, 512, NULL, compilation_log));
 				CRITICAL_ERROR(compilation_log);
 			};
 			return shader;
@@ -131,59 +164,98 @@ namespace prosper
 		const auto fragment_shader = _compile_shader(shader_source.fragment_shader_source, "fragment");
 		// Link shaders into shader program
 		auto program = glCreateProgram();
-		glAttachShader(program, vertex_shader);
-		glAttachShader(program, fragment_shader);
-		glLinkProgram(program);
+		GL_CALL(glAttachShader(program, vertex_shader));
+		GL_CALL(glAttachShader(program, fragment_shader));
+		GL_CALL(glLinkProgram(program));
 		// Error checking
 		int compilation_status;
 		char compilation_log[512];
-		glGetProgramiv(program, GL_LINK_STATUS, &compilation_status);
+		GL_CALL(glGetProgramiv(program, GL_LINK_STATUS, &compilation_status));
 		if(!compilation_status)
 		{
-			glGetProgramInfoLog(program, 512, NULL, compilation_log);
+			GL_CALL(glGetProgramInfoLog(program, 512, NULL, compilation_log));
 			CRITICAL_ERROR(compilation_log);
 		}
 		// delete the shaders as they're linked into our program now and no longer necessary
-		glDeleteShader(vertex_shader);
-		glDeleteShader(fragment_shader);
+		GL_CALL(glDeleteShader(vertex_shader));
+		GL_CALL(glDeleteShader(fragment_shader));
 		return {program};
 	}
 
-	void OpenGLRenderer::use_shader(const Shader& shader_program)
+	void OpenGL::use_shader(const Shader& shader)
 	{
-		glUseProgram(shader_program);
-
-		auto model = glGetUniformLocation(shader_program, "model");
+		glUseProgram(shader);
 	}
 
-	TextureHandle OpenGLRenderer::load_texture(const void* data, int width, int height, int num_channels)
+	GPUTextureHandle OpenGL::load_texture(const Buffer& data, int width, int height, int num_channels)
 	{
 		// Generate and bind texture
 		unsigned int texture;
-		glGenTextures(1, &texture);
-		glBindTexture(GL_TEXTURE_2D, texture);
+		GL_CALL(glGenTextures(1, &texture));
+		GL_CALL(glBindTexture(GL_TEXTURE_2D, texture));
 		// set the texture wrapping/filtering options (on the currently bound texture object)
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
+		GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
+		GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
+		GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
 		// generate the texture (and mipmap)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
+		GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data));
+		GL_CALL(glGenerateMipmap(GL_TEXTURE_2D));
 		return texture;
 	}
 
-
-	void OpenGLRenderer::set_viewport(const Viewport& viewport)
+	void OpenGL::set_vertex_attribute(size_t index, GPUTypeId type_id, size_t num_types)
 	{
-		_viewport = viewport;
+		_vertex_attributes[index] = {type_id, num_types};
 
-		glViewport(viewport.x, viewport.y, viewport.w, viewport.h);
+		// Calculate stride
+		size_t stride{};
 
-	}
-	const Viewport& OpenGLRenderer::get_viewport() const
-	{
-		// TODO: insert return statement here
-		return _viewport;
+		for(auto index = 0u; index < _vertex_attributes.size(); index++)
+		{
+			const auto& vertex_attribute = _vertex_attributes[index];
+
+			size_t type_size{};
+
+			switch(vertex_attribute.type_id)
+			{
+				case GPUTypeId::Float:
+				{
+					type_size = sizeof(float);
+					break;
+				}
+				default: CRITICAL_ERROR("Invalid GPUTypeId");
+			};
+
+			stride += type_size * vertex_attribute.num_types;
+		}
+
+		// Set all stored attributes
+
+		size_t offset{};
+
+		for(auto index = 0u; index < _vertex_attributes.size(); index++)
+		{
+			const auto& vertex_attribute = _vertex_attributes[index];
+
+			uint16_t gl_type_id{};
+			size_t type_size{};
+
+			switch(vertex_attribute.type_id)
+			{
+				case GPUTypeId::Float:
+				{
+					gl_type_id = GL_FLOAT;
+					type_size = sizeof(float);
+					break;
+				}
+				default: CRITICAL_ERROR("Invalid element type");
+			};
+
+			GL_CALL(glEnableVertexAttribArray(index));
+			GL_CALL(glVertexAttribPointer(index, (GLuint) vertex_attribute.num_types, gl_type_id, GL_FALSE, stride, (const void*) offset));
+
+			offset += vertex_attribute.num_types * type_size;
+		}
 	}
 };

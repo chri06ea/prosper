@@ -38,7 +38,7 @@ namespace prosper
 		}
 
 		// Multiplication overload
-		template < size_t RhsRows, size_t RhsColumns>
+		template <size_t RhsRows, size_t RhsColumns>
 		constexpr const auto operator*(const Matrix<T, RhsRows, RhsColumns>& rhs) const
 		{
 			Matrix<T, Columns, RhsRows> result;
@@ -62,13 +62,12 @@ namespace prosper
 			}
 			return result;
 		}
-
 	};
 
 	// Creates an orthographic matrix. this is for mapping screen coordinates to normalized device coordinates
 	/*
-	*
-	*/
+	 *
+	 */
 
 	constexpr inline Matrix<float, 4, 4> OrthographicMatrix(
 		float left, float right,
@@ -76,9 +75,9 @@ namespace prosper
 		float near, float far)
 	{
 		return Matrix<float, 4, 4>{
-			2.0f / (right - left), 0.0f, 0.0f, 0.0f, //
-			0.0f, 2.0f / (top - bottom), 0.0f, 0.0f, //
-			0.0f, 0.0f, -2.0f / (far - near), 0.0f,  //
+			2.0f / (right - left), 0.0f, 0.0f, 0.0f,																//
+			0.0f, 2.0f / (top - bottom), 0.0f, 0.0f,																//
+			0.0f, 0.0f, -2.0f / (far - near),  0.0f,																//
 			-(right + left) / (right - left), -(top + bottom) / (top - bottom), -(far + near) / (far - near), 1.0f, //
 		};
 	};
@@ -88,26 +87,24 @@ namespace prosper
 	{
 		return Matrix<float, 4, 4>{
 			1.0, 0.0, 0.0, 0.0,
-				0.0, 1.0, 0.0, 0.0,
-				0.0, 0.0, 1.0, 0.0,
-				x, y, z, 1.0
-		};
+			0.0, 1.0, 0.0, 0.0,
+			0.0, 0.0, 1.0, 0.0,
+			x, y, z, 1.0};
 	}
 
 	namespace test
 	{
 		//* Orthographic projection example
-		// Try to project screen coords 400, 200 to normalized device coordinates
-
+		// Try to project screen coords 400x200 to normalized device coordinates on a 800x400 screen.
+		// Result should be 0,0 (The center of the screen)
 		static constexpr auto projection_matrix = OrthographicMatrix(0, 800, 0, 400, -1, 1);
 		static constexpr auto model = TranslationMatrix(0, 0, 0);
-		static constexpr auto wpos = (projection_matrix * model) * Matrix<float, 1, 4>{400, 200, 0, 1};
-		static_assert(wpos(0, 0) == 0.f && wpos(1, 0) == 0.f);
+		static constexpr auto normalized_device_coordinates = (projection_matrix * model) * Matrix<float, 1, 4>{400, 200, 0, 1};
+		static_assert(normalized_device_coordinates(0, 0) == 0.f && normalized_device_coordinates(1, 0) == 0.f);
 	}
 
-
 	template <typename T, size_t N>
-	struct Vector : Matrix<T, N, 1>
+	struct Vector : Matrix<T, 1, N>
 	{
 		constexpr float& x() { return this->fields[0][0]; }
 		constexpr float& y() { return this->fields[1][0]; }
@@ -115,6 +112,16 @@ namespace prosper
 		constexpr const float& x() const { return this->fields[0][0]; }
 		constexpr const float& y() const { return this->fields[1][0]; }
 		constexpr const float& z() const { return this->fields[2][0]; }
+
+		constexpr T& operator[](const int& index) const
+		{
+			return this->fields[index][0];
+		}
+
+		T& operator[](const int& index)
+		{
+			return this->fields[index][0];
+		}
 
 		constexpr T length_sqr() const
 		{
@@ -137,21 +144,31 @@ namespace prosper
 		}
 	};
 
-	template <typename T>
-	struct Angle : Matrix<T, 3, 1>
+	struct Angle : Matrix<float, 1, 3>
 	{
 		float& pitch() { return this->fields[0][0]; }
 		float& yaw() { return this->fields[1][0]; }
 		float& roll() { return this->fields[2][0]; }
 		const float& pitch() const { return this->fields[0][0]; }
-		const float& yaw() const { return   this->fields[1][0]; }
-		const float& roll() const { return  this->fields[2][0]; }
+		const float& yaw() const { return this->fields[1][0]; }
+		const float& roll() const { return this->fields[2][0]; }
 	};
 
-}
+	template <typename T>
+	struct Rect
+	{
+		T x, y, w, h;
+	};
 
-template <typename T>
-struct Rect
-{
-	T x, y, w, h;
-};
+	template <typename T>
+	struct Point
+	{
+		T x, y;
+	};
+
+	template <typename T>
+	struct Color
+	{
+		T r, g, b, a;
+	};
+}

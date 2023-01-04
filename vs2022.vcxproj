@@ -164,16 +164,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\assets.hpp" />
+    <ClInclude Include="src\core.hpp" />
     <ClInclude Include="src\game.hpp" />
     <ClInclude Include="src\glad\glad.h" />
     <ClInclude Include="src\glad\khrplatform.h" />
-    <ClInclude Include="src\math\math.hpp" />
-    <ClInclude Include="src\math\matrix.hpp" />
-    <ClInclude Include="src\math\rect.hpp" />
-    <ClInclude Include="src\math\vector.hpp" />
+    <ClInclude Include="src\render_device.hpp" />
+    <ClInclude Include="src\math.hpp" />
     <ClInclude Include="src\opengl.hpp" />
     <ClInclude Include="src\platform.hpp" />
     <ClInclude Include="src\renderer.hpp" />
+    <ClInclude Include="src\renderer_base.hpp" />
     <ClInclude Include="src\sound.hpp" />
     <ClInclude Include="src\thirdparty\stb_image.h" />
     <ClInclude Include="src\win32\wgl.hpp" />
@@ -190,6 +190,10 @@
     <ClCompile Include="src\win32\wgl.cpp" />
     <ClCompile Include="src\win32\win32_sound.cpp" />
     <ClCompile Include="src\win32\win32_window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ignore\trash.txt" />
+    <Text Include="ignore\trash2.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -6,7 +6,7 @@ namespace prosper
 {
     using SoundHandle = void *;
 
-    class Sound
+    class SoundDevice
     {
     public:
         virtual void load(std::string_view name) = 0;

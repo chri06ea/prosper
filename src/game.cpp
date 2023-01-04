@@ -1,49 +1,82 @@
 #include "game.hpp"
 
+#include <renderer.hpp>
+
 namespace prosper
 {
-
-	void process_input(GameState &gamestate, Key key, KeyState keystate)
+	Game::Game(Platform& platform)
+		: _platform(platform)
 	{
 	}
 
-	void process_rendering(GameState &gamestate, Renderer *renderer)
+	void Game::run()
 	{
-		renderer->begin_frame();
+		auto window_event_handler = [&](WindowEventType event, const WindowEvent& context)
+		{
+			on_window_event(event, context);
+		};
 
-		// Draw scenary
+		auto window = _platform.create_window(window_event_handler);
 
-		// Draw sun
+		window->init_opengl();
 
-		// Draw ground
-		draw_box(renderer, 500, 500, 50, 50);
+		window->show();
 
-		// Draw buildings
+		while(true)
+		{
+			window->flush_messages();
 
-		// Draw entities
+			run_tick();
 
-		static float p = 0.f;
+			run_rendering();
 
-		const auto entity_vertices = make_quad_vertices(
-			p, 0.1f, 0.05f, 0.05f, // Position
-			0.2f, 0.2f, 0.2f, 1.f  // Color
-		);
-
-		p += 0.001;
-
-		renderer->draw({.vertices = entity_vertices});
-
-		// Draw overlay (bottom bar, text, popup etc)
-
-		renderer->end_frame();
+			window->swap_buffers();
+		}
 	}
 
-	void process_tick(GameState &gamestate)
+	void Game::run_rendering()
 	{
-		// Calculate ingame time
-		gamestate.simulation_time = (float)(gamestate.platform_tick - gamestate.platform_initial_tick) / (float)gamestate.platform_ticks_per_second;
+		static const auto render_device = _platform.get_render_device();
 
-		// Advance 1 game tick
-		gamestate.simulation_count++;
+		static BasicDynamicRenderer test_renderer(render_device);
+		
+		test_renderer.render();
+
+		//static QuadRenderer quad_renderer(render_device);
+		//
+		//quad_renderer.push(0, 0, 400, 400);
+		//
+		//quad_renderer.render();
+	}
+
+	void Game::run_tick()
+	{
+		auto& tick_count = state.tick_count;
+		const auto& ticks_per_second = state.ticks_per_second;
+
+		const auto tick_interval = 1.f / ticks_per_second;
+		const auto tick_time = static_cast<float>(tick_count) * tick_interval;
+
+		tick_count++;
+	}
+
+	void Game::on_window_event(WindowEventType event, const WindowEvent& context)
+	{
+		if(event == WindowEventType::Input)
+		{
+			if(context.input.type == InputEvent::Type::Key)
+			{
+				const auto& key = context.input.data.key_event.key;
+				const auto& state = context.input.data.key_event.keystate;
+			}
+		}
+		else if(event == WindowEventType::Resize)
+		{
+			const auto& resize = context.resize;
+			_platform.get_render_device()->set_viewport({
+				.x = resize.left, .y = resize.top,
+				.w = resize.right - resize.left, .h = resize.bottom - resize.top
+			});
+		}
 	}
 }
