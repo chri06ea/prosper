@@ -1,19 +1,20 @@
 #pragma once
 
-#include "core.hpp"
-#include "render_device.hpp"
-#include "math.hpp"
+#include <core/core.hpp>
+
+#include <platform/render_device.hpp>
 
 namespace prosper
 {
-
-	struct VertexBuffer : Buffer
+	struct VertexBuffer : DynamicBuffer
 	{
 		size_t count{};
 
+		VertexBuffer(Allocator& allocator) : DynamicBuffer(allocator) {}
+
 		constexpr operator std::span<float>() const
 		{
-			return std::span{(float*) data, this->size()};
+			return std::span{(float*) data, this->size};
 		}
 
 		template <typename T>
@@ -23,13 +24,15 @@ namespace prosper
 		}
 	};
 
-	struct IndexBuffer : Buffer
+	struct IndexBuffer : DynamicBuffer
 	{
 		size_t count{};
 
+		IndexBuffer(Allocator& allocator) : DynamicBuffer(allocator) {}
+
 		constexpr operator std::span<unsigned int>() const
 		{
-			return std::span{(unsigned int*) data, this->size()};
+			return std::span{(unsigned int*) data, this->size};
 		}
 
 		template <typename T>
@@ -43,9 +46,11 @@ namespace prosper
 
 	struct RenderData
 	{
-		VertexBuffer vertices{};
+		VertexBuffer vertices;
 
-		IndexBuffer indices{};
+		IndexBuffer indices;
+
+		RenderData(Allocator& allocator) : vertices(allocator), indices(allocator) {}
 
 		template <typename ...Floats>
 		inline void push_vertex(const Floats& ...values)
@@ -71,13 +76,11 @@ namespace prosper
 
 	struct RendererBase
 	{
-		// GPU interface
 		RenderDevice* dev;
 
-		// CPU side render data
-		RenderData data{};
+		RenderData data;
 
-		RendererBase(RenderDevice* render_device) : dev(render_device) {}
+		RendererBase(RenderDevice* render_device, Allocator& allocator) : dev(render_device), data(allocator) {}
 
 		// Helper methods
 

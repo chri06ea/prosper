@@ -21,31 +21,31 @@
     <ClInclude Include="src\game.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\opengl.hpp">
+    <ClInclude Include="src\opengl\opengl.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\platform.hpp">
+    <ClInclude Include="src\platform\platform.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\sound.hpp">
+    <ClInclude Include="src\platform\sound.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\window.hpp">
+    <ClInclude Include="src\platform\window.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\glad\glad.h">
+    <ClInclude Include="src\thirdparty\glad\glad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\glad\khrplatform.h">
+    <ClInclude Include="src\thirdparty\glad\khrplatform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\math.hpp">
+    <ClInclude Include="src\core\math.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\thirdparty\stb_image.h">
+    <ClInclude Include="src\thirdparty\stb\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\win32\wgl.hpp">
@@ -57,13 +57,31 @@
     <ClInclude Include="src\win32\win32_window.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\render_device.hpp">
+    <ClInclude Include="src\platform\render_device.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\core.hpp">
+    <ClInclude Include="src\core\core.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer_base.hpp">
+    <ClInclude Include="src\renderers\renderer_base.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\allocator.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\buffer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderers\basic_renderer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderers\dynamic_renderer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderers\renderers.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderers\basic_quad_renderer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -74,13 +92,13 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\opengl.cpp">
+    <ClCompile Include="src\opengl\opengl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\platform.cpp">
+    <ClCompile Include="src\platform\platform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\glad\glad.c">
+    <ClCompile Include="src\thirdparty\glad\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\win32\wgl.cpp">

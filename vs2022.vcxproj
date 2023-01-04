@@ -74,28 +74,28 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>build\</OutDir>
     <IntDir>build\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src;$(SolutionDir)src\thirdparty;$(IncludePath)</IncludePath>
     <SourcePath>$(SolutionDir)src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>build\</OutDir>
     <IntDir>build\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src;$(SolutionDir)src\thirdparty;$(IncludePath)</IncludePath>
     <SourcePath>$(SolutionDir)src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IntDir>build\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>build\</OutDir>
-    <IncludePath>$(SolutionDir)src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src;$(SolutionDir)src\thirdparty;$(IncludePath)</IncludePath>
     <SourcePath>$(SolutionDir)src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IntDir>build\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>build\</OutDir>
-    <IncludePath>$(SolutionDir)src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src;$(SolutionDir)src\thirdparty;$(IncludePath)</IncludePath>
     <SourcePath>$(SolutionDir)src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -163,30 +163,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\renderers\basic_quad_renderer.hpp" />
+    <ClInclude Include="src\renderers\basic_renderer.hpp" />
+    <ClInclude Include="src\core\allocator.hpp" />
     <ClInclude Include="src\assets.hpp" />
-    <ClInclude Include="src\core.hpp" />
+    <ClInclude Include="src\core\buffer.hpp" />
+    <ClInclude Include="src\core\core.hpp" />
+    <ClInclude Include="src\renderers\dynamic_renderer.hpp" />
     <ClInclude Include="src\game.hpp" />
-    <ClInclude Include="src\glad\glad.h" />
-    <ClInclude Include="src\glad\khrplatform.h" />
-    <ClInclude Include="src\render_device.hpp" />
-    <ClInclude Include="src\math.hpp" />
-    <ClInclude Include="src\opengl.hpp" />
-    <ClInclude Include="src\platform.hpp" />
+    <ClInclude Include="src\renderers\renderers.hpp" />
+    <ClInclude Include="src\thirdparty\glad\glad.h" />
+    <ClInclude Include="src\thirdparty\glad\khrplatform.h" />
+    <ClInclude Include="src\platform\render_device.hpp" />
+    <ClInclude Include="src\core\math.hpp" />
+    <ClInclude Include="src\opengl\opengl.hpp" />
+    <ClInclude Include="src\platform\platform.hpp" />
     <ClInclude Include="src\renderer.hpp" />
-    <ClInclude Include="src\renderer_base.hpp" />
-    <ClInclude Include="src\sound.hpp" />
-    <ClInclude Include="src\thirdparty\stb_image.h" />
+    <ClInclude Include="src\renderers\renderer_base.hpp" />
+    <ClInclude Include="src\platform\sound.hpp" />
+    <ClInclude Include="src\thirdparty\stb\stb_image.h" />
     <ClInclude Include="src\win32\wgl.hpp" />
     <ClInclude Include="src\win32\win32_sound.hpp" />
     <ClInclude Include="src\win32\win32_window.hpp" />
-    <ClInclude Include="src\window.hpp" />
+    <ClInclude Include="src\platform\window.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\game.cpp" />
-    <ClCompile Include="src\glad\glad.c" />
+    <ClCompile Include="src\thirdparty\glad\glad.c" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\opengl.cpp" />
-    <ClCompile Include="src\platform.cpp" />
+    <ClCompile Include="src\opengl\opengl.cpp" />
+    <ClCompile Include="src\platform\platform.cpp" />
     <ClCompile Include="src\win32\wgl.cpp" />
     <ClCompile Include="src\win32\win32_sound.cpp" />
     <ClCompile Include="src\win32\win32_window.cpp" />

@@ -1,7 +1,6 @@
 #include "opengl.hpp"
 
-#include <assets.hpp>
-#include <glad/glad.h>
+#include <thirdparty/glad/glad.h>
 
 // Wrapper for doing opengl calls, which will also print error (if any)
 #define GL_CALL(CALL)                                  \
@@ -96,10 +95,7 @@ namespace prosper
 			default: CRITICAL_ERROR("Invalid buffer type");
 		};
 
-		const void* d = data;
-		const size_t size = data.size();
-
-		GL_CALL(glBufferSubData(gl_buffer_type, 0, (GLsizei) data.size(), data));
+		GL_CALL(glBufferSubData(gl_buffer_type, 0, (GLsizei) data.size, data));
 	}
 
 	void OpenGL::draw_elements(GPUElementType type, size_t indices_count)

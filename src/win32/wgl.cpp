@@ -1,5 +1,9 @@
 #include "wgl.hpp"
 
+#include <core/core.hpp>
+
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 
 #define WGL_CONTEXT_CORE_PROFILE_BIT_ARB 0x00000001          // Core-profile mode
 #define WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB 0x00000002 // Immediate mode
@@ -119,8 +123,10 @@ namespace prosper
             CRITICAL_ERROR("failed DestroyWindow");
     }
 
-    void init_opengl_rendering_context_with_wgl(HDC device_context)
+    void init_opengl_rendering_context_with_wgl(void* _device_context)
     {
+        HDC device_context = (HDC)_device_context;
+
         // make sure function pointers are initialized
         if (!wglCreateContextAttribsARB || !wglChoosePixelFormatARB)
             init_wgl_function_pointers();

@@ -1,6 +1,8 @@
 #include "game.hpp"
 
-#include <renderer.hpp>
+#include <platform/platform.hpp>
+
+#include <renderers/renderers.hpp>
 
 namespace prosper
 {
@@ -37,8 +39,9 @@ namespace prosper
 	void Game::run_rendering()
 	{
 		static const auto render_device = _platform.get_render_device();
+		static Allocator allocator;
 
-		static BasicDynamicRenderer test_renderer(render_device);
+		static BasicDynamicRenderer test_renderer(render_device, allocator);
 		
 		test_renderer.render();
 

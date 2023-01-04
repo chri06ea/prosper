@@ -4,7 +4,7 @@
  * Game logic
  */
 
-#include "platform.hpp"
+#include <platform/platform.hpp>
 
 namespace prosper
 {

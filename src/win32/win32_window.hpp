@@ -1,11 +1,9 @@
-#include <platform.hpp>
+#include <platform/platform.hpp>
 
 /*
  *   WIN32(Windows) window implementation
  */
 
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
 
 namespace prosper
 {

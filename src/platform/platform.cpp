@@ -4,7 +4,11 @@
 #include <stdexcept>
 #include <win32/win32_window.hpp>
 #include <win32/win32_sound.hpp>
-#include <opengl.hpp>
+
+#include <opengl/opengl.hpp>
+
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 
 namespace prosper
 {

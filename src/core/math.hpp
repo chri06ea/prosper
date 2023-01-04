@@ -4,6 +4,9 @@
 #include <iomanip>
 #include <array>
 
+#undef fear
+#undef near
+
 namespace prosper
 {
 	template <typename T, size_t Rows, size_t Columns>

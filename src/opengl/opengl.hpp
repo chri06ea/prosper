@@ -4,7 +4,9 @@
  * OpenGL renderer implementation
  */
 
-#include "platform.hpp"
+#include <core/core.hpp>
+
+#include <platform/render_device.hpp>
 
 namespace prosper
 {
@@ -39,7 +41,10 @@ namespace prosper
 
 		virtual GPUTextureHandle load_texture(const Buffer& data, int width, int height, int num_channels) override;
 
+		virtual void set_vertex_attribute(size_t index, GPUTypeId type_id, size_t num_types) override;
+
 	private:
+
 		Viewport _viewport{};
 		
 		struct VertexAttributeData
@@ -48,9 +53,6 @@ namespace prosper
 			size_t num_types;
 		};
 
-		std::unordered_map<size_t, VertexAttributeData> _vertex_attributes;
-
-		// Inherited via RenderDevice
-		virtual void set_vertex_attribute(size_t index, GPUTypeId type_id, size_t num_types) override;
+		std::unordered_map<int, VertexAttributeData> _vertex_attributes;
 	};
 }
