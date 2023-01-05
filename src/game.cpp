@@ -79,10 +79,7 @@ namespace prosper
 
 	void Game::run_rendering()
 	{
-		static const auto render_device = _platform.get_render_device();
-		static Allocator allocator;
-
-		static SpriteRenderer test_renderer(render_device, allocator);
+		static SpriteRenderer test_renderer(&_platform);
 
 		auto push_background = [&]()
 		{

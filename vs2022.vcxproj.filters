@@ -67,12 +67,6 @@
     <ClInclude Include="src\platform\window.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderers\basic_renderer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\renderers\dynamic_renderer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\renderers\renderer_base.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

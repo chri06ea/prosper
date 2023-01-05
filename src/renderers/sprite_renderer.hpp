@@ -1,5 +1,7 @@
 #pragma once
 
+#include <platform/platform.hpp>
+
 #include "renderer_base.hpp"
 
 
@@ -14,15 +16,13 @@ namespace prosper
 		EBO _ebo{};
 		Shader _shader{};
 
-		RenderData data;
-
 		static constexpr auto vertex_buffer_size = 0x10000;
 		static constexpr auto index_buffer_size = 0x10000;
 
 		static constexpr auto vertices_per_quad = 4u;
 		static constexpr auto indices_per_quad = 6u;
 
-		SpriteRenderer(RenderDevice* render_device, Allocator& allocator) : RendererBase(render_device, allocator), data(allocator)
+		SpriteRenderer(Platform* platform) : RendererBase(platform)
 		{
 			_vao = dev->create_vao();
 			_vbo = dev->create_vertex_buffer(vertex_buffer_size);
@@ -70,7 +70,6 @@ namespace prosper
 			_shader = dev->create_shader({.vertex_shader_source = glsl_vertex_shader, .fragment_shader_source = glsl_fragment_shader});
 
 			dev->use_shader(_shader);
-
 
 			//auto texture = dev->load_texture(data, width, height, num_channels);
 			//dev->bind_texture(texture);

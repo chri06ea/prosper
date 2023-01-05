@@ -110,9 +110,9 @@ namespace prosper
 	{
 		static constexpr size_t default_alloc_size = 64;
 
-		Allocator& allocator;
+		Allocator* allocator;
 
-		DynamicBuffer(Allocator& allocator) : Buffer(allocator.alloc(default_alloc_size), default_alloc_size), allocator(allocator)
+		DynamicBuffer(Allocator* allocator) : Buffer(allocator->alloc(default_alloc_size), default_alloc_size), allocator(allocator)
 		{
 			clear();
 		}
@@ -125,7 +125,7 @@ namespace prosper
 			{
 				capacity *= 2;
 
-				this->data = (unsigned char*) allocator.resize(this->data, capacity);
+				this->data = (unsigned char*) allocator->resize(this->data, capacity);
 			}
 
 			Buffer::push(value);

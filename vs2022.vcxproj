@@ -178,8 +178,6 @@
     <ClInclude Include="src\platform\render_device.hpp" />
     <ClInclude Include="src\platform\sound.hpp" />
     <ClInclude Include="src\platform\window.hpp" />
-    <ClInclude Include="src\renderers\basic_renderer.hpp" />
-    <ClInclude Include="src\renderers\dynamic_renderer.hpp" />
     <ClInclude Include="src\renderers\renderers.hpp" />
     <ClInclude Include="src\renderers\renderer_base.hpp" />
     <ClInclude Include="src\renderers\sprite_renderer.hpp" />

@@ -8,7 +8,7 @@ namespace prosper
 {
 	struct VertexBuffer : DynamicBuffer
 	{
-		VertexBuffer(Allocator& allocator) : DynamicBuffer(allocator) {}
+		VertexBuffer(Allocator* allocator) : DynamicBuffer(allocator) {}
 
 		constexpr operator std::span<float>() const
 		{
@@ -18,7 +18,7 @@ namespace prosper
 
 	struct IndexBuffer : DynamicBuffer
 	{
-		IndexBuffer(Allocator& allocator) : DynamicBuffer(allocator) {}
+		IndexBuffer(Allocator* allocator) : DynamicBuffer(allocator) {}
 
 		constexpr operator std::span<unsigned int>() const
 		{
@@ -36,7 +36,7 @@ namespace prosper
 			num_indices{},
 			num_indices_pairs{};
 
-		RenderData(Allocator& allocator) : vertex_data(allocator), index_data(allocator) {}
+		RenderData(Allocator* allocator) : vertex_data(allocator), index_data(allocator) {}
 
 		template <typename ...Floats>
 		inline void push_vertex(const Floats& ...values)
@@ -73,7 +73,7 @@ namespace prosper
 
 		RenderData data;
 
-		RendererBase(RenderDevice* render_device, Allocator& allocator) : dev(render_device), data(allocator) {}
+		RendererBase(Platform* platform) : dev(platform->get_render_device()), data(platform->get_allocator()) {}
 
 		// Helper methods
 
