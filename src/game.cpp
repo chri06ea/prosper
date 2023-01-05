@@ -7,27 +7,6 @@
 
 namespace prosper
 {
-	template <typename T, size_t N>
-	struct List
-	{
-
-	};
-
-	struct GameEntity
-	{
-
-	};
-
-	struct WorldState
-	{
-
-		void update()
-		{
-
-		}
-	};
-
-
 	Game::Game(Platform& platform)
 		: _platform(platform)
 	{
@@ -114,7 +93,7 @@ namespace prosper
 				}
 			};
 
-			UIElement elem {.x = 0, .y= 0, .w= 100, .h= 100};
+			UIElement elem{.x = 0, .y = 0, .w = 100, .h = 100};
 
 			push_ui_element(elem);
 
@@ -131,6 +110,10 @@ namespace prosper
 
 	void Game::run_simulation()
 	{
+		static TravelingMerchant merchant;
+
+		merchant.update(state);
+
 		// World event
 
 		if(state.game_time - state.last_event_time > state.event_cooldown)

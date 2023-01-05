@@ -20,6 +20,7 @@
   <ItemGroup>
     <Text Include="ignore\trash.txt" />
     <Text Include="ignore\trash2.txt" />
+    <Text Include="ignore\game_rules.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\thirdparty\stb\stb_image.h">
