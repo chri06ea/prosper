@@ -93,10 +93,8 @@ namespace prosper
 
 		auto push_ui = []()
 		{
-			std::function<void(UIElement&)> push_ui_element = [](UIElement&)
+			std::function<void(UIElement&)> push_ui_element = [](UIElement& elem)
 			{
-
-				UIElement elem;
 
 				switch(elem.type)
 				{
@@ -115,6 +113,10 @@ namespace prosper
 					}
 				}
 			};
+
+			UIElement elem {.x = 0, .y= 0, .w= 100, .h= 100};
+
+			push_ui_element(elem);
 
 			test_renderer.push(300, 300, 100, 100, {1.f, 0.f, 1.f, 1.f});
 			test_renderer.push(500, 500, 40, 40, {1.f, 1.f, 1.f, 1.f});

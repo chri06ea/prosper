@@ -4,9 +4,6 @@
 
 #include "renderer_base.hpp"
 
-
-#define UNIT_TO_NDC_COORD(x) -1.f + x * 2
-
 namespace prosper
 {
 	struct SpriteRenderer : RendererBase

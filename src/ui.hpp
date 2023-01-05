@@ -17,6 +17,8 @@ namespace prosper
 
 	struct UIElement
 	{
+		size_t x{}, y{}, w{}, h{};
+
 		std::vector<UIElement> children{};
 
 		enum class Type
@@ -29,8 +31,6 @@ namespace prosper
 		{
 			children.push_back(child);
 		}
-
-		size_t x{}, y{}, w{}, h{};
 
 		struct FrameData
 		{
