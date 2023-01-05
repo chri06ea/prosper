@@ -178,7 +178,7 @@
     <ClInclude Include="src\core\math.hpp" />
     <ClInclude Include="src\opengl\opengl.hpp" />
     <ClInclude Include="src\platform\platform.hpp" />
-    <ClInclude Include="src\renderer.hpp" />
+    <ClInclude Include="src\renderers\renderer.hpp" />
     <ClInclude Include="src\renderers\renderer_base.hpp" />
     <ClInclude Include="src\platform\sound.hpp" />
     <ClInclude Include="src\thirdparty\stb\stb_image.h" />

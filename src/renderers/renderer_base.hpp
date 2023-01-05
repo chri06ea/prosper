@@ -8,8 +8,6 @@ namespace prosper
 {
 	struct VertexBuffer : DynamicBuffer
 	{
-		size_t count{};
-
 		VertexBuffer(Allocator& allocator) : DynamicBuffer(allocator) {}
 
 		constexpr operator std::span<float>() const
@@ -20,8 +18,6 @@ namespace prosper
 
 	struct IndexBuffer : DynamicBuffer
 	{
-		size_t count{};
-
 		IndexBuffer(Allocator& allocator) : DynamicBuffer(allocator) {}
 
 		constexpr operator std::span<unsigned int>() const
@@ -32,33 +28,42 @@ namespace prosper
 
 	struct RenderData
 	{
-		VertexBuffer vertices;
+		VertexBuffer vertex_data;
 
-		IndexBuffer indices;
+		IndexBuffer index_data;
 
-		RenderData(Allocator& allocator) : vertices(allocator), indices(allocator) {}
+		size_t num_vertices{},
+			num_indices{},
+			num_indices_pairs{};
+
+		RenderData(Allocator& allocator) : vertex_data(allocator), index_data(allocator) {}
 
 		template <typename ...Floats>
 		inline void push_vertex(const Floats& ...values)
 		{
-			vertices.count++;
+			num_vertices++;
 
-			(..., vertices.push(values));
+			(..., vertex_data.push(values));
 		}
 
 		template <typename ...UInts>
 		inline void push_indices(const UInts& ...values)
 		{
-			indices.count = sizeof...(values);
+			num_indices_pairs++;
 
-			(..., indices.push(values));
+			num_indices += sizeof...(values);
+
+			(..., index_data.push(values));
 		}
 
 		void clear()
 		{
-			vertices.clear();
+			num_vertices = {};
+			num_indices = {};
+			num_indices_pairs = {};
 
-			indices.clear();
+			vertex_data.clear();
+			index_data.clear();
 		}
 	};
 
@@ -79,7 +84,7 @@ namespace prosper
 			static const auto model = TranslationMatrix(0.f, 0.f, 0.f);
 			const auto projection = OrthographicMatrix(0, (float) viewport.w, 0.f, (float) viewport.h, -1.f, 1.f);
 			const auto normalized_device_coordinates = (projection * model) * Vector<float, 4>{static_cast<float>(x), static_cast<float>(y), 0.f, 1.f};
-			return {normalized_device_coordinates(0, 0), normalized_device_coordinates(1, 0)};
+			return {normalized_device_coordinates(0, 0), normalized_device_coordinates(1, 0) * -1.f};
 		}
 	};
 }

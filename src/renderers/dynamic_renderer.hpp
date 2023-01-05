@@ -3,8 +3,10 @@
 #include "renderer_base.hpp"
 
 
-namespace prosper {
-	// renders some dynamic rendering data
+#define UNIT_TO_NDC_COORD(x) -1.f + x * 2
+
+namespace prosper
+{
 	struct BasicDynamicRenderer : RendererBase
 	{
 		VAO _vao{};
@@ -29,22 +31,68 @@ namespace prosper {
 		{
 			dev->clear(0.1f, 0.1f, 0.1f, 1.f);
 
-			for(float i{}; i < 5.f; i++)
+			auto unit_to_ndc_coordinates = []()
 			{
-				const float offset = (i * 0.3f) + -1.f;
 
-				data.push_vertex(+0.25f + offset, -0.25f + offset);
-				data.push_vertex(-0.25f + offset, -0.25f + offset);
-				data.push_vertex(-0.25f + offset, +0.25f + offset);
+			};
 
-				const auto index_offset = (int) i * 3;
-				data.push_indices(0 + index_offset, 1 + index_offset, 2 + index_offset);
-			}
+			auto draw_simple_triangle_at_center = [&]()
+			{
+				data.push_vertex(+0.25f, -0.25f);
+				data.push_vertex(-0.25f, -0.25f);
+				data.push_vertex(-0.25f, +0.25f);
+
+				data.push_indices(0, 1, 2);
+			};
+
+			auto draw_at_normalized_world_coordinate = [&](float x0, float y0, float x1, float y1)
+			{
+				data.push_vertex(x0, y0);
+				data.push_vertex(x0, y1);
+				data.push_vertex(x1, y1);
+
+				data.push_indices(0, 1, 2);
+			};
+
+			auto draw_triangle_at_ndc_simplified = [&](float x, float y, float w, float h)
+			{
+				const auto x0 = -1.f + x * 2;
+				const auto y0 = -1.f + y * 2;
+				const auto nw = w * 2;
+				const auto nh = h * 2;
+				const auto x1 = x0 + nw;
+				const auto y1 = y0 + nh;
+
+				data.push_vertex(x0, y0);
+				data.push_vertex(x0, y1);
+				data.push_vertex(x1, y1);
+
+				data.push_indices(0, 1, 2);
+			};
+
+			auto draw_quad = [&](float x, float y, float w, float h)
+			{
+				const auto nx0 = -1.f + x * 2;
+				const auto ny0 = -1.f + y * 2;
+				const auto nw = w * 2;
+				const auto nh = h * 2;
+				const auto nx1 = nx0 + nw;
+				const auto ny1 = ny0 + nh;
+
+				data.push_vertex(nx0, ny0);
+				data.push_vertex(nx0, ny1);
+				data.push_vertex(nx1, ny1);
+				data.push_vertex(nx1, ny0);
+
+				data.push_indices(0, 1, 2);
+				data.push_indices(2, 3, 0);
+			};
+
 
 			dev->bind_vao(_vao);
-			dev->write_buffer(GPUBufferType::VBO, _vbo, data.vertices);
-			dev->write_buffer(GPUBufferType::EBO, _ebo, data.indices);
-			dev->draw_elements(GPUElementType::Triangle, data.indices.size);
+			dev->write_buffer(GPUBufferType::VBO, _vbo, data.vertex_data);
+			dev->write_buffer(GPUBufferType::EBO, _ebo, data.index_data);
+			dev->draw_elements(GPUElementType::Triangle, data.index_data.size);
 
 			data.clear();
 		}

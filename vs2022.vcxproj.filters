@@ -27,7 +27,7 @@
     <ClInclude Include="src\platform\platform.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer.hpp">
+    <ClInclude Include="src\renderers\renderer.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\platform\sound.hpp">

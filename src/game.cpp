@@ -41,15 +41,10 @@ namespace prosper
 		static const auto render_device = _platform.get_render_device();
 		static Allocator allocator;
 
-		static BasicDynamicRenderer test_renderer(render_device, allocator);
-
+		static SpriteRenderer test_renderer(render_device, allocator);
+		test_renderer.push(0,0,100,100);
+		test_renderer.push(300, 300, 100, 100);
 		test_renderer.render();
-
-		//static QuadRenderer quad_renderer(render_device);
-		//
-		//quad_renderer.push(0, 0, 400, 400);
-		//
-		//quad_renderer.render();
 	}
 
 	void Game::run_tick()

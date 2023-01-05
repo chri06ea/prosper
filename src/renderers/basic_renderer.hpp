@@ -4,7 +4,6 @@
 
 namespace prosper
 {
-	// renders some static rendering data
 	struct BasicRenderer : RendererBase
 	{
 		VAO _vao{};
