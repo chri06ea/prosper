@@ -6,6 +6,27 @@
 
 namespace prosper
 {
+	template <typename T, size_t N>
+	struct List
+	{
+
+	};
+
+	struct GameEntity
+	{
+
+	};
+
+	struct WorldState
+	{
+
+		void update()
+		{
+
+		}
+	};
+
+
 	Game::Game(Platform& platform)
 		: _platform(platform)
 	{
@@ -24,11 +45,30 @@ namespace prosper
 
 		window->show();
 
+		const auto platform_start_tick_count = _platform.get_platform_tick_count();
+		const auto platform_ticks_per_second = _platform.get_platform_ticks_per_second();
+
+		auto last_simulation_time = -1.f;
+		const auto simulation_interval = 1.f / 64.f;
+
+		state.game_time_step = simulation_interval;
+
 		while(true)
 		{
+			const auto platform_tick = _platform.get_platform_tick_count();
+
+			const auto simulation_time = (float) (platform_tick - platform_start_tick_count) / (float) platform_ticks_per_second;
+
 			window->flush_messages();
 
-			run_tick();
+			if(const auto time_since_simulation = simulation_time - last_simulation_time;
+				time_since_simulation >= simulation_interval)
+			{
+				run_simulation();
+
+				// TODO
+				last_simulation_time = simulation_time;
+			}
 
 			run_rendering();
 
@@ -42,20 +82,31 @@ namespace prosper
 		static Allocator allocator;
 
 		static SpriteRenderer test_renderer(render_device, allocator);
-		test_renderer.push(0,0,100,100);
+		//test_renderer.push_ndc(
+		//	{-1.00f,+1.00f},
+		//	{-1.00f,-1.00f},
+		//	{+1.00f,-1.00f},
+		//	{+1.00f,+1.00f},
+		//	{0.0f,1.f,1.f,1.f});
+
 		test_renderer.push(300, 300, 100, 100);
+		//test_renderer.push(0, 0, 0.1f, 0.1f, true);
 		test_renderer.render();
 	}
 
-	void Game::run_tick()
+	void Game::run_simulation()
 	{
-		auto& tick_count = state.tick_count;
-		const auto& ticks_per_second = state.ticks_per_second;
+		// World event
 
-		const auto tick_interval = 1.f / ticks_per_second;
-		const auto tick_time = static_cast<float>(tick_count) * tick_interval;
+		if(state.game_time - state.last_event_time > state.event_cooldown)
+		{
+			LOG_INFORMATION("Event!!!");
 
-		tick_count++;
+			state.last_event_time = state.game_time;
+		}
+
+		state.game_simulation_count++;
+		state.game_time += state.game_time_step;
 	}
 
 	void Game::on_window_event(WindowEventType event, const WindowEvent& context)

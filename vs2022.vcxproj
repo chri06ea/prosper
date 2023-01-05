@@ -172,6 +172,7 @@
     <ClInclude Include="src\renderers\dynamic_renderer.hpp" />
     <ClInclude Include="src\game.hpp" />
     <ClInclude Include="src\renderers\renderers.hpp" />
+    <ClInclude Include="src\renderers\ui_renderer.hpp" />
     <ClInclude Include="src\thirdparty\glad\glad.h" />
     <ClInclude Include="src\thirdparty\glad\khrplatform.h" />
     <ClInclude Include="src\platform\render_device.hpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="src\renderers\renderer_base.hpp" />
     <ClInclude Include="src\platform\sound.hpp" />
     <ClInclude Include="src\thirdparty\stb\stb_image.h" />
+    <ClInclude Include="src\ui.hpp" />
     <ClInclude Include="src\win32\wgl.hpp" />
     <ClInclude Include="src\win32\win32_sound.hpp" />
     <ClInclude Include="src\win32\win32_window.hpp" />
