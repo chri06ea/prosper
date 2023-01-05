@@ -10,13 +10,16 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "../thirdparty/stb/stb_image.h"
+
 namespace prosper
 {
 	Window* Platform::create_window(WindowEventHandler event_handler, WindowOptions options)
 	{
-#ifdef WIN32
+		#ifdef WIN32
 		return Win32Window::create(event_handler);
-#endif
+		#endif
 	}
 
 	RenderDevice* Platform::get_render_device()
@@ -32,25 +35,34 @@ namespace prosper
 
 	uint64_t Platform::get_platform_tick_count()
 	{
-#ifdef WIN32
+		#ifdef WIN32
 		LARGE_INTEGER tick_count;
 
 		if(!QueryPerformanceCounter(&tick_count))
 			CRITICAL_ERROR("QueryPerformanceCounter call failed");
 
 		return tick_count.QuadPart;
-#endif
+		#endif
 	}
 
 	uint64_t Platform::get_platform_ticks_per_second()
 	{
-#ifdef WIN32
+		#ifdef WIN32
 		LARGE_INTEGER frequency;
 
 		if(!QueryPerformanceFrequency(&frequency))
 			CRITICAL_ERROR("QueryPerformanceCounter call failed");
 
 		return frequency.QuadPart;
-#endif
+		#endif
+	}
+	Allocator* Platform::get_allocator()
+	{
+		static Allocator allocator;
+		return &allocator;
+	}
+	unsigned char* Platform::load_image(const char* path, int& width, int& height, int& num_channels)
+	{
+		return {}; //return stbi_load(path, &width,&height,&num_channels, 0);
 	}
 };

@@ -39,7 +39,7 @@ namespace prosper
 
 		virtual void use_shader(const Shader& shader) override;
 
-		virtual GPUTextureHandle load_texture(const Buffer& data, int width, int height, int num_channels) override;
+		virtual GPUTextureHandle load_texture(const void* data, int width, int height, int num_channels) override;
 
 		virtual void set_vertex_attribute(size_t index, GPUTypeId type_id, size_t num_types) override;
 
@@ -58,5 +58,8 @@ namespace prosper
 
 		// Inherited via RenderDevice
 		virtual void clear(float r, float g, float b, float a) override;
+
+		// Inherited via RenderDevice
+		virtual void bind_texture(GPUTextureHandle texture) override;
 	};
 }

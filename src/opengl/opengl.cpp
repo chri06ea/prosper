@@ -183,7 +183,7 @@ namespace prosper
 		glUseProgram(shader);
 	}
 
-	GPUTextureHandle OpenGL::load_texture(const Buffer& data, int width, int height, int num_channels)
+	GPUTextureHandle OpenGL::load_texture(const void* data, int width, int height, int num_channels)
 	{
 		// Generate and bind texture
 		unsigned int texture;
@@ -257,8 +257,12 @@ namespace prosper
 
 	void OpenGL::clear(float r, float g, float b, float a)
 	{
-		GL_CALL(glClearColor(r,g,b,a));
+		GL_CALL(glClearColor(r, g, b, a));
 
 		glClear(GL_COLOR_BUFFER_BIT);
+	}
+	void OpenGL::bind_texture(GPUTextureHandle texture)
+	{
+		GL_CALL(glBindTexture(GL_TEXTURE_2D, texture));
 	}
 };

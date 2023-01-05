@@ -29,5 +29,9 @@ namespace prosper
 		uint64_t get_platform_tick_count();
 
 		uint64_t get_platform_ticks_per_second();
+
+		Allocator* get_allocator();
+
+		unsigned char* load_image(const char* path, int& width, int& height, int& num_channels);
 	};
 };

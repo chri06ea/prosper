@@ -79,9 +79,9 @@ namespace prosper
 	{
 		return Matrix<float, 4, 4>{
 			2.0f / (right - left), 0.0f, 0.0f, 0.0f,																//
-			0.0f, 2.0f / (top - bottom), 0.0f, 0.0f,																//
-			0.0f, 0.0f, -2.0f / (far - near),  0.0f,																//
-			-(right + left) / (right - left), -(top + bottom) / (top - bottom), -(far + near) / (far - near), 1.0f, //
+				0.0f, 2.0f / (top - bottom), 0.0f, 0.0f,																//
+				0.0f, 0.0f, -2.0f / (far - near), 0.0f,																//
+				-(right + left) / (right - left), -(top + bottom) / (top - bottom), -(far + near) / (far - near), 1.0f, //
 		};
 	};
 
@@ -90,9 +90,9 @@ namespace prosper
 	{
 		return Matrix<float, 4, 4>{
 			1.0, 0.0, 0.0, 0.0,
-			0.0, 1.0, 0.0, 0.0,
-			0.0, 0.0, 1.0, 0.0,
-			x, y, z, 1.0};
+				0.0, 1.0, 0.0, 0.0,
+				0.0, 0.0, 1.0, 0.0,
+				x, y, z, 1.0};
 	}
 
 	namespace test
@@ -169,9 +169,22 @@ namespace prosper
 		T x, y;
 	};
 
-	template <typename T>
 	struct Color
 	{
-		T r, g, b, a;
+		Color() 
+			: Color(1.f, 1.f, 1.f, 1.f)
+		{
+
+		}
+
+		Color(float r, float g, float b, float a)
+			: r(r), g(g), b(b), a(a)
+		{
+
+		}
+
+		float r, g, b, a;
 	};
+
+	static inline const Color White = Color{1.f,1.f,1.f,1.f};
 }

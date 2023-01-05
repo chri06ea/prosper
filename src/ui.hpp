@@ -19,6 +19,11 @@ namespace prosper
 	{
 		std::vector<UIElement> children{};
 
+		enum class Type
+		{
+			Frame
+		} type{};
+
 		template <typename T>
 		T* add_child(const T& child)
 		{
@@ -26,5 +31,15 @@ namespace prosper
 		}
 
 		size_t x{}, y{}, w{}, h{};
+
+		struct FrameData
+		{
+			Color color{};
+		};
+
+		union
+		{
+			FrameData frame{};
+		}data{};
 	};
 }

@@ -163,45 +163,45 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\renderers\basic_quad_renderer.hpp" />
-    <ClInclude Include="src\renderers\basic_renderer.hpp" />
-    <ClInclude Include="src\core\allocator.hpp" />
+    <Text Include="ignore\trash.txt" />
+    <Text Include="ignore\trash2.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="src\assets.hpp" />
+    <ClInclude Include="src\core\allocator.hpp" />
     <ClInclude Include="src\core\buffer.hpp" />
     <ClInclude Include="src\core\core.hpp" />
-    <ClInclude Include="src\renderers\dynamic_renderer.hpp" />
+    <ClInclude Include="src\core\math.hpp" />
     <ClInclude Include="src\game.hpp" />
+    <ClInclude Include="src\opengl\opengl.hpp" />
+    <ClInclude Include="src\platform\platform.hpp" />
+    <ClInclude Include="src\platform\render_device.hpp" />
+    <ClInclude Include="src\platform\sound.hpp" />
+    <ClInclude Include="src\platform\window.hpp" />
+    <ClInclude Include="src\renderers\basic_renderer.hpp" />
+    <ClInclude Include="src\renderers\dynamic_renderer.hpp" />
     <ClInclude Include="src\renderers\renderers.hpp" />
+    <ClInclude Include="src\renderers\renderer_base.hpp" />
+    <ClInclude Include="src\renderers\sprite_renderer.hpp" />
     <ClInclude Include="src\renderers\ui_renderer.hpp" />
     <ClInclude Include="src\thirdparty\glad\glad.h" />
     <ClInclude Include="src\thirdparty\glad\khrplatform.h" />
-    <ClInclude Include="src\platform\render_device.hpp" />
-    <ClInclude Include="src\core\math.hpp" />
-    <ClInclude Include="src\opengl\opengl.hpp" />
-    <ClInclude Include="src\platform\platform.hpp" />
-    <ClInclude Include="src\renderers\renderer.hpp" />
-    <ClInclude Include="src\renderers\renderer_base.hpp" />
-    <ClInclude Include="src\platform\sound.hpp" />
     <ClInclude Include="src\thirdparty\stb\stb_image.h" />
     <ClInclude Include="src\ui.hpp" />
     <ClInclude Include="src\win32\wgl.hpp" />
     <ClInclude Include="src\win32\win32_sound.hpp" />
     <ClInclude Include="src\win32\win32_window.hpp" />
-    <ClInclude Include="src\platform\window.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\game.cpp" />
-    <ClCompile Include="src\thirdparty\glad\glad.c" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\opengl\opengl.cpp" />
     <ClCompile Include="src\platform\platform.cpp" />
+    <ClCompile Include="src\renderers\sprite_renderer.cpp" />
+    <ClCompile Include="src\thirdparty\glad\glad.c" />
     <ClCompile Include="src\win32\wgl.cpp" />
     <ClCompile Include="src\win32\win32_sound.cpp" />
     <ClCompile Include="src\win32\win32_window.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ignore\trash.txt" />
-    <Text Include="ignore\trash2.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

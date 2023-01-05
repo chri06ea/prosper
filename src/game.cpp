@@ -1,8 +1,9 @@
 #include "game.hpp"
 
 #include <platform/platform.hpp>
-
 #include <renderers/renderers.hpp>
+
+#include <ui.hpp>
 
 namespace prosper
 {
@@ -82,15 +83,50 @@ namespace prosper
 		static Allocator allocator;
 
 		static SpriteRenderer test_renderer(render_device, allocator);
-		//test_renderer.push_ndc(
-		//	{-1.00f,+1.00f},
-		//	{-1.00f,-1.00f},
-		//	{+1.00f,-1.00f},
-		//	{+1.00f,+1.00f},
-		//	{0.0f,1.f,1.f,1.f});
 
-		test_renderer.push(300, 300, 100, 100);
-		//test_renderer.push(0, 0, 0.1f, 0.1f, true);
+		auto push_background = [&]()
+		{
+			test_renderer.push_ndc(
+				{-1.00f,+1.00f},
+				{-1.00f,-1.00f},
+				{+1.00f,+1.00f},
+				{+1.00f,-1.00f},
+				{0.0f,1.f,0.f,1.f});
+		};
+
+		auto push_ui = []()
+		{
+			std::function<void(UIElement&)> push_ui_element = [](UIElement&)
+			{
+
+				UIElement elem;
+
+				switch(elem.type)
+				{
+					case UIElement::Type::Frame:
+					{
+						const auto& data = elem.data.frame;
+
+						test_renderer.push(elem.x, elem.y, elem.w, elem.h, data.color);
+
+						break;
+					}
+
+					default:
+					{
+						test_renderer.push(elem.x, elem.y, elem.w, elem.h, {1.f, 0.f, 1.f, 1.f});
+					}
+				}
+			};
+
+			test_renderer.push(300, 300, 100, 100, {1.f, 0.f, 1.f, 1.f});
+			test_renderer.push(500, 500, 40, 40, {1.f, 1.f, 1.f, 1.f});
+		};
+
+		push_background();
+
+		push_ui();
+
 		test_renderer.render();
 	}
 
