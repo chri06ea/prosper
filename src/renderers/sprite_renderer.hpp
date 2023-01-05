@@ -62,7 +62,7 @@ namespace prosper
 				uniform sampler2D image;
                 void main()
                 {
-					color = vec4(a_color_); // * texture(image, a_texture_coords_);
+					color = vec4(a_color_) * texture(image, a_texture_coords_);
                 };
 			)";
 
@@ -70,9 +70,12 @@ namespace prosper
 			_shader = dev->create_shader({.vertex_shader_source = glsl_vertex_shader, .fragment_shader_source = glsl_fragment_shader});
 
 			dev->use_shader(_shader);
+			
+			int width, height, num_channels;
+			auto data = platform->load_image("./assets/wall.jpg", width, height, num_channels);
 
-			//auto texture = dev->load_texture(data, width, height, num_channels);
-			//dev->bind_texture(texture);
+			auto texture = dev->load_texture(data, width, height, num_channels);
+			dev->bind_texture(texture);
 		}
 
 		size_t _num_sprites_pushed{};
@@ -88,11 +91,11 @@ namespace prosper
 		)
 		{
 			data.push_vertex(tl, color, 1.f, 1.f, texture_size);
-			data.push_vertex(tr, color, 1.f, 0.f, texture_size);
+			data.push_vertex(tr, color, 0.f, 1.f, texture_size);
 			data.push_vertex(br, color, 0.f, 0.f, texture_size);
-			data.push_vertex(bl, color, 1.f, 1.f, texture_size);
+			data.push_vertex(bl, color, 1.f, 0.f, texture_size);
 
-			const int i = (int)(_num_sprites_pushed * vertices_per_quad);
+			const int i = (int) (_num_sprites_pushed * vertices_per_quad);
 			data.push_indices(0 + i, 1 + i, 2 + i);
 			data.push_indices(2 + i, 3 + i, 0 + i);
 

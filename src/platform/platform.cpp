@@ -63,6 +63,6 @@ namespace prosper
 	}
 	unsigned char* Platform::load_image(const char* path, int& width, int& height, int& num_channels)
 	{
-		return {}; //return stbi_load(path, &width,&height,&num_channels, 0);
+		return stbi_load(path, &width,&height,&num_channels, 0);
 	}
 };
