@@ -5,13 +5,12 @@
  */
 
 #include <platform/platform.hpp>
+#include <engine/engine.hpp>
 
 #include "gamestate.hpp"
 
 namespace prosper
 {
-
-
 	class Game
 	{
 	public:

@@ -177,6 +177,9 @@
     <ClInclude Include="src\core\matrix.hpp" />
     <ClInclude Include="src\core\projection.hpp" />
     <ClInclude Include="src\core\vector.hpp" />
+    <ClInclude Include="src\engine\engine.hpp" />
+    <ClInclude Include="src\engine\engine_game.hpp" />
+    <ClInclude Include="src\engine\engine_state.hpp" />
     <ClInclude Include="src\game\entity.hpp" />
     <ClInclude Include="src\game\game.hpp" />
     <ClInclude Include="src\game\gamestate.hpp" />
@@ -199,6 +202,7 @@
     <ClInclude Include="src\win32\win32_window.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\engine.cpp" />
     <ClCompile Include="src\game\game.cpp" />
     <ClCompile Include="src\game\traveling_merchant.cpp" />
     <ClCompile Include="src\main.cpp" />
