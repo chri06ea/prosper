@@ -5,7 +5,7 @@
 namespace prosper
 {
 	template <typename T, size_t N>
-	struct VectorBase
+	struct Vector
 	{
 		T fields[N]{};
 
@@ -22,9 +22,9 @@ namespace prosper
 		}
 
 		// Compare vectors
-		constexpr const auto operator ==(const VectorBase<T, N>& rhs) const
+		constexpr const auto operator ==(const Vector<T, N>& rhs) const
 		{
-			for(auto i = 0; i < N; i++)
+			for(size_t i = 0; i < N; i++)
 				if(fields[i] != rhs[i])
 					return false;
 
@@ -32,48 +32,73 @@ namespace prosper
 		}
 
 		// Add vectors
-		constexpr const auto operator +(const VectorBase<T, N>& rhs) const
+		constexpr const auto operator +(const Vector<T, N>& rhs) const
 		{
-			VectorBase<T, N> result{};
-			for(auto i = 0; i < N; i++)
+			Vector<T, N> result{};
+			for(size_t i = 0; i < N; i++)
 				result[i] = fields[i] + rhs[i];
 			return result;
 		}
 
-		// Subtract vectors
-		constexpr const auto operator -(const VectorBase<T, N>& rhs) const
+		constexpr auto operator +=(const Vector<T, N>& rhs)
 		{
-			VectorBase<T, N> result{};
 			for(auto i = 0; i < N; i++)
+				(*this)[i] += rhs[i];
+		}
+
+		// Subtract vectors
+		constexpr const auto operator -(const Vector<T, N>& rhs) const
+		{
+			Vector<T, N> result{};
+			for(size_t i = 0; i < N; i++)
 				result[i] = fields[i] - rhs[i];
 			return result;
 		}
 
 
-		// Multiply vectors
-		constexpr const auto operator *(const VectorBase<T, N>& rhs) const
+		constexpr auto operator -=(const Vector<T, N>& rhs)
 		{
-			VectorBase<T, N> result{};
+			for(size_t i = 0; i < N; i++)
+				(*this)[i] -= rhs[i];
+		}
+
+		// Multiply vectors
+		constexpr const auto operator *(const Vector<T, N>& rhs) const
+		{
+			Vector<T, N> result{};
 			for(size_t i = 0; i < N; i++)
 				result[i] = fields[i] * rhs[i];
 			return result;
 		}
 
-		// Divide vectors
-		constexpr const auto operator /(const VectorBase<T, N>& rhs) const
+
+		constexpr auto operator *=(const Vector<T, N>& rhs)
 		{
-			VectorBase<T, N> result{};
-			for(auto i = 0; i < N; i++)
+			for(size_t i = 0; i < N; i++)
+				(*this)[i] *= rhs[i];
+		}
+
+		// Divide vectors
+		constexpr const auto operator /(const Vector<T, N>& rhs) const
+		{
+			Vector<T, N> result{};
+			for(size_t i = 0; i < N; i++)
 				result[i] = fields[i] / rhs[i];
 			return result;
+		}
+
+		constexpr auto operator /=(const Vector<T, N>& rhs)
+		{
+			for(size_t i = 0; i < N; i++)
+				(*this)[i] /= rhs[i];
 		}
 
 		// Up scale
 		//template <typename U>
 		constexpr const auto operator *(const float& rhs) const
 		{
-			VectorBase<T, N> result{};
-			for(auto i = 0; i < N; i++)
+			Vector<T, N> result{};
+			for(size_t i = 0; i < N; i++)
 				result[i] = fields[i] * rhs;
 			return result;
 		}
@@ -82,8 +107,8 @@ namespace prosper
 		//template <typename U>
 		constexpr const auto operator /(const float& rhs) const
 		{
-			VectorBase<T, N> result{};
-			for(auto i = 0; i < N; i++)
+			Vector<T, N> result{};
+			for(size_t i = 0; i < N; i++)
 				result[i] = fields[i] / rhs;
 			return result;
 		}
@@ -107,50 +132,17 @@ namespace prosper
 		// Normalize
 		constexpr const auto normalized() const
 		{
-			VectorBase<T, N> result = *this;
+			Vector<T, N> result = *this;
 			const auto len = length();
 			for(size_t i = 0; i < N; i++)
 				result[i] /= len;
 			return result;
 		}
-	};
-
-	template <typename T, size_t N>
-	struct Vector : VectorBase<T, N> {};
-
-	template <typename T>
-	struct Vector<T, 2> : VectorBase<T, 2>
-	{
-		constexpr Vector()
-		{
-			this->fields[0] = T{}, this->fields[1] = T{};
-		}
-
-		constexpr Vector(T x, T y)
-		{
-			this->fields[0] = x, this->fields[1] = y;
-		}
-
-		constexpr T& x() { return this->fields[0]; }
-		constexpr T& y() { return this->fields[1]; }
-		constexpr const T& x() const { return this->fields[0]; }
-		constexpr const T& y() const { return this->fields[1]; }
-	};
 
 
-	template <typename T>
-	struct Vector<T, 3> : VectorBase<T, 3>
-	{
-		constexpr Vector()
-		{
-			this->fields[0] = T{}, this->fields[1] = T{}, this->fields[2] = T{};
-		}
-
-		constexpr Vector(T x, T y, T z)
-		{
-			this->fields[0] = x, this->fields[1] = y, this->fields[2] = z;
-		}
-
+		// Accessors
+		// It's possible to move these to their proper type with std::enable_if,
+		// but for now, it's not worth the time, considering it only means we'll have a 'z' accessor on 2d vectors
 		constexpr T& x() { return this->fields[0]; }
 		constexpr T& y() { return this->fields[1]; }
 		constexpr T& z() { return this->fields[2]; }
@@ -158,6 +150,21 @@ namespace prosper
 		constexpr const T& y() const { return this->fields[1]; }
 		constexpr const T& z() const { return this->fields[2]; }
 	};
+
+
+	template <typename T>
+	using Vector2 = Vector<T, 2>;
+
+	using Vector2i = Vector<int, 2>;
+	using Vector2f = Vector<float, 2>;
+	using Vector2d = Vector<double, 2>;
+
+	template <typename T>
+	using Vector3 = Vector<T, 3>;
+
+	using Vector3i = Vector<int, 3>;
+	using Vector3f = Vector<float, 3>;
+	using Vector3d = Vector<double, 3>;
 
 	template <typename T>
 	using Vector2 = Vector<T, 2>;

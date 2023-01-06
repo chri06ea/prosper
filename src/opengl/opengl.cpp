@@ -14,7 +14,7 @@ namespace prosper
 {
 	OpenGL::OpenGL()
 	{
-		if(gladLoadGL() != 0)
+		if(!gladLoadGL())
 			CRITICAL_ERROR("Glad init failed");
 	}
 

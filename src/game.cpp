@@ -76,7 +76,6 @@ namespace prosper
 		{
 			std::function<void(UIElement&)> push_ui_element = [](UIElement& elem)
 			{
-
 				switch(elem.type)
 				{
 					case UIElement::Type::Frame:
@@ -109,8 +108,7 @@ namespace prosper
 
 
 		// world space to screen space
-		auto pos = (merchant.position / 1000.f) * (800.f);
-		test_renderer.push(pos[0], pos[1], 25, 25);
+		test_renderer.push(merchant.position[0], merchant.position[1], 25, 25);
 		test_renderer.render();
 	}
 
