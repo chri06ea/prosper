@@ -80,11 +80,10 @@ namespace prosper
 		Vector<float, 2> screen_to_normalized_device_coordinates(int x, int y)
 		{
 			const auto& viewport = dev->get_viewport();
-
-			static const auto model = TranslationMatrix(0.f, 0.f, 0.f);
-			const auto projection = OrthographicMatrix(0, (float) viewport.w, 0.f, (float) viewport.h, -1.f, 1.f);
-			const auto normalized_device_coordinates = (projection * model) * Matrix<float, 1, 4>{static_cast<float>(x), static_cast<float>(y), 0.f, 1.f};
-			return {normalized_device_coordinates(0, 0), normalized_device_coordinates(1, 0) * -1.f};
+			auto projected = project_orthographic(static_cast<float>(x), static_cast<float>(y), static_cast<float>(viewport.w), static_cast<float>(viewport.h));
+			// Invert Y axis
+			projected.y() *= -1.f;
+			return projected;
 		}
 	};
 }

@@ -76,7 +76,6 @@ namespace prosper
 					if(visit_end_time <= gamestate.game_time)
 						state = State::Leaving;
 
-					position = position + (target_position * 0.01f);
 
 					break;
 				}

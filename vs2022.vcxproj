@@ -173,6 +173,7 @@
     <ClInclude Include="src\core\buffer.hpp" />
     <ClInclude Include="src\core\core.hpp" />
     <ClInclude Include="src\core\math.hpp" />
+    <ClInclude Include="src\core\mathfn.hpp" />
     <ClInclude Include="src\core\matrix.hpp" />
     <ClInclude Include="src\core\projection.hpp" />
     <ClInclude Include="src\core\vector.hpp" />
