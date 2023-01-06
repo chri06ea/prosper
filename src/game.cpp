@@ -7,6 +7,8 @@
 
 namespace prosper
 {
+	static TravelingMerchant merchant;
+
 	Game::Game(Platform& platform)
 		: _platform(platform)
 	{
@@ -105,13 +107,15 @@ namespace prosper
 
 		push_ui();
 
+
+		// world space to screen space
+		auto pos = (merchant.position / 1000.f) * (800.f);
+		test_renderer.push(pos[0], pos[1], 25, 25);
 		test_renderer.render();
 	}
 
 	void Game::run_simulation()
 	{
-		static TravelingMerchant merchant;
-
 		merchant.update(state);
 
 		// World event

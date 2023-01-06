@@ -28,7 +28,7 @@ namespace prosper
 
 	struct Entity
 	{
-		Vector<float, 3> position{};
+		Vector<float, 3> position{ 100.f, 100.f, 0.f};
 
 		virtual void update(GameState& gamestate) = 0;
 	};
@@ -46,6 +46,8 @@ namespace prosper
 
 		float visit_start_time{};
 		float visit_end_time{};
+
+		float move_speed = 5.f;
 
 		virtual void update(GameState& gamestate) override
 		{
@@ -67,9 +69,14 @@ namespace prosper
 				case State::Visiting:
 				{
 					LOG_INFORMATION("Visiting.. Leaving in " << visit_end_time - gamestate.game_time << " seconds.");
+					
+					// Move towards world center. This is where our base is
+					target_position = {0.f,0.f,0.f};
 
 					if(visit_end_time <= gamestate.game_time)
 						state = State::Leaving;
+
+					position = position + (target_position * 0.01f);
 
 					break;
 				}
@@ -80,6 +87,9 @@ namespace prosper
 					break;
 				}
 			}
+
+
+			//position = target_position * move_speed;
 		}
 	};
 

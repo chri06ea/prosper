@@ -173,6 +173,9 @@
     <ClInclude Include="src\core\buffer.hpp" />
     <ClInclude Include="src\core\core.hpp" />
     <ClInclude Include="src\core\math.hpp" />
+    <ClInclude Include="src\core\matrix.hpp" />
+    <ClInclude Include="src\core\projection.hpp" />
+    <ClInclude Include="src\core\vector.hpp" />
     <ClInclude Include="src\game.hpp" />
     <ClInclude Include="src\opengl\opengl.hpp" />
     <ClInclude Include="src\platform\platform.hpp" />
