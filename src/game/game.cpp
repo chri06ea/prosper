@@ -5,6 +5,8 @@
 
 #include <ui.hpp>
 
+#include "traveling_merchant.hpp"
+
 namespace prosper
 {
 	static TravelingMerchant merchant;
