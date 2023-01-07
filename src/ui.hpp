@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <core/core.hpp>
 
 namespace prosper
 {
@@ -19,7 +19,7 @@ namespace prosper
 	{
 		size_t x{}, y{}, w{}, h{};
 
-		std::vector<UIElement> children{};
+		DynamicList<UIElement> children{};
 
 		enum class Type
 		{
@@ -27,10 +27,9 @@ namespace prosper
 		} type{};
 
 		template <typename T>
-		T* add_child(const T& child)
-		{
-			children.push_back(child);
-		}
+		T& add_child(const T& child);
+
+		// Wrappers
 
 		struct FrameData
 		{
@@ -42,4 +41,29 @@ namespace prosper
 			FrameData frame{};
 		}data{};
 	};
+
+	struct UIFrame : UIElement
+	{
+
+	};
+
+	template<typename T>
+	T& UIElement::add_child(const T& child)
+	{
+		children.push_back(child);
+		return &children[children.size()];
+	}
+
+	namespace tests
+	{
+		namespace ui
+		{
+			static inline const auto f = ([]()
+			{
+				auto e = UIFrame{};
+				//e.add_child<UIFrame>({});
+				return 1;
+			})();
+		}
+	}
 }

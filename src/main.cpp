@@ -1,12 +1,14 @@
 #include <game/game.hpp>
+#include <engine/engine.hpp>
 
 using namespace prosper;
 
 int main()
 {
+	Game game;
+
 	Platform platform{};
+	Engine engine(platform, game);
 
-	Game game(platform);
-
-	game.run();
+	engine.run_game();
 }

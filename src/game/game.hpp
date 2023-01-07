@@ -11,29 +11,12 @@
 
 namespace prosper
 {
-	class Game
+	class Game : public EngineGame, public GameState
 	{
 	public:
-		// Constructor
-		Game(Platform& platform);
+		virtual void run_simulation(const EngineState& engine_state) override;
 
-		// Run the game
-		void run();
-
-		// Renders the game
-		void run_rendering();
-
-		// Run a game tick
-		void run_simulation();
-
-		// process a window input event
-		void on_window_event(WindowEventType event, const WindowEvent& context);
-
-
-	private:
-		Platform& _platform;
-
-		GameState state;
+		virtual void on_window_event(WindowEventType event, const WindowEvent& context) override;
 	};
 }
 

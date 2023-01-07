@@ -6,6 +6,12 @@
 
 namespace prosper
 {
+	class GameRenderer
+	{
+	public:
+		
+	};
+
 	class Engine : public EngineState
 	{
 	public:
@@ -14,6 +20,11 @@ namespace prosper
 		void run_game();
 
 	private:
+
+		void render_ui();
+
+		void render();
+
 		EngineGame& game;
 		Platform& platform;
 	};

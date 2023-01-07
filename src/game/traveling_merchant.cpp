@@ -43,8 +43,6 @@ namespace prosper
 				// Move towards world center. This is where our base is
 				target_position = {400,400,0.f};
 
-
-
 				break;
 			}
 			case State::Leaving:

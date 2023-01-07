@@ -172,6 +172,7 @@
     <ClInclude Include="src\core\allocator.hpp" />
     <ClInclude Include="src\core\buffer.hpp" />
     <ClInclude Include="src\core\core.hpp" />
+    <ClInclude Include="src\core\list.hpp" />
     <ClInclude Include="src\core\math.hpp" />
     <ClInclude Include="src\core\mathfn.hpp" />
     <ClInclude Include="src\core\matrix.hpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="src\game\entity.hpp" />
     <ClInclude Include="src\game\game.hpp" />
     <ClInclude Include="src\game\gamestate.hpp" />
+    <ClInclude Include="src\game\player.hpp" />
     <ClInclude Include="src\game\traveling_merchant.hpp" />
     <ClInclude Include="src\opengl\opengl.hpp" />
     <ClInclude Include="src\platform\platform.hpp" />
@@ -204,6 +206,7 @@
   <ItemGroup>
     <ClCompile Include="src\engine\engine.cpp" />
     <ClCompile Include="src\game\game.cpp" />
+    <ClCompile Include="src\game\player.cpp" />
     <ClCompile Include="src\game\traveling_merchant.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\opengl\opengl.cpp" />
