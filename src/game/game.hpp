@@ -1,22 +1,33 @@
 #pragma once
 
-/*
- * Game logic
- */
+#include <platform/services/platform.hpp>
+#include <platform/services/window.hpp>
+#include <platform/services/renderer.hpp>
+#include <platform/services/filesystem.hpp>
+#include <game/models/gamestate.hpp>
+#include <game/models/enginestate.hpp>
+#include <game/models/renderstate.hpp>
 
-#include <platform/platform.hpp>
-#include <engine/engine.hpp>
-
-#include "gamestate.hpp"
-
-namespace prosper
+namespace lib
 {
-	class Game : public EngineGame, public GameState
+	class Game
 	{
 	public:
-		virtual void run_simulation(const EngineState& engine_state) override;
 
-		virtual void on_window_event(WindowEventType event, const WindowEvent& context) override;
+		void initialize(RenderState& rs);
+
+		void initialize(EngineState& es);
+
+		void render(EngineState& es, GameState& gs, RenderState& rs);
+
+		void simulate(EngineState& es, GameState& gs);
+
+		void update(GameState& gs, EngineState& es, RenderState& rs);
+
+	private:
+
+		IPlatform& _platform;
+		IRenderer& _renderer;
+		IFileSystem& _filesystem;
 	};
 }
-
