@@ -163,11 +163,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ignore\game_rules.txt" />
-    <Text Include="ignore\trash.txt" />
-    <Text Include="ignore\trash2.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="src\assets.hpp" />
     <ClInclude Include="src\core\allocator.hpp" />
     <ClInclude Include="src\core\buffer.hpp" />
@@ -182,13 +177,40 @@
     <ClInclude Include="src\engine\engine_game.hpp" />
     <ClInclude Include="src\engine\engine_state.hpp" />
     <ClInclude Include="src\game\entity.hpp" />
+    <ClInclude Include="src\game\extensions\extensions.hpp" />
+    <ClInclude Include="src\game\extensions\gamestate_extensions.hpp" />
+    <ClInclude Include="src\game\extensions\renderstate_extensions.hpp" />
     <ClInclude Include="src\game\game.hpp" />
     <ClInclude Include="src\game\gamestate.hpp" />
+    <ClInclude Include="src\game\models\enginestate.hpp" />
+    <ClInclude Include="src\game\models\gamestate.hpp" />
+    <ClInclude Include="src\game\models\renderstate.hpp" />
     <ClInclude Include="src\game\player.hpp" />
     <ClInclude Include="src\game\traveling_merchant.hpp" />
     <ClInclude Include="src\opengl\opengl.hpp" />
+    <ClInclude Include="src\platform\core\defs.hpp" />
+    <ClInclude Include="src\platform\core\math.hpp" />
+    <ClInclude Include="src\platform\dependencies\wgl.hpp" />
+    <ClInclude Include="src\platform\extensions\filesystem_extensions.hpp" />
+    <ClInclude Include="src\platform\extensions\matrix_extensions.hpp" />
+    <ClInclude Include="src\platform\extensions\platform_extensions.hpp" />
+    <ClInclude Include="src\platform\extensions\renderer_extensions.hpp" />
+    <ClInclude Include="src\platform\extensions\vector_extensions.hpp" />
+    <ClInclude Include="src\platform\models\image.hpp" />
+    <ClInclude Include="src\platform\models\matrix.hpp" />
+    <ClInclude Include="src\platform\models\point.hpp" />
+    <ClInclude Include="src\platform\models\vector.hpp" />
+    <ClInclude Include="src\platform\models\viewport.hpp" />
+    <ClInclude Include="src\platform\models\window_event.hpp" />
     <ClInclude Include="src\platform\platform.hpp" />
     <ClInclude Include="src\platform\render_device.hpp" />
+    <ClInclude Include="src\platform\services\filesystem.hpp" />
+    <ClInclude Include="src\platform\services\impl\opengl_renderer.hpp" />
+    <ClInclude Include="src\platform\services\impl\win32_platform.hpp" />
+    <ClInclude Include="src\platform\services\impl\win32_window.hpp" />
+    <ClInclude Include="src\platform\services\platform.hpp" />
+    <ClInclude Include="src\platform\services\renderer.hpp" />
+    <ClInclude Include="src\platform\services\window.hpp" />
     <ClInclude Include="src\platform\sound.hpp" />
     <ClInclude Include="src\platform\window.hpp" />
     <ClInclude Include="src\renderers\renderers.hpp" />
@@ -204,18 +226,17 @@
     <ClInclude Include="src\win32\win32_window.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\engine\engine.cpp" />
     <ClCompile Include="src\game\game.cpp" />
-    <ClCompile Include="src\game\player.cpp" />
-    <ClCompile Include="src\game\traveling_merchant.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\opengl\opengl.cpp" />
-    <ClCompile Include="src\platform\platform.cpp" />
-    <ClCompile Include="src\renderers\sprite_renderer.cpp" />
+    <ClCompile Include="src\platform\dependencies\wgl.cpp" />
+    <ClCompile Include="src\platform\extensions\filesystem_extensions.cpp" />
+    <ClCompile Include="src\platform\services\impl\opengl_renderer.cpp" />
+    <ClCompile Include="src\platform\services\impl\win32_platform.cpp" />
+    <ClCompile Include="src\platform\services\impl\win32_window.cpp" />
     <ClCompile Include="src\thirdparty\glad\glad.c" />
-    <ClCompile Include="src\win32\wgl.cpp" />
-    <ClCompile Include="src\win32\win32_sound.cpp" />
-    <ClCompile Include="src\win32\win32_window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
