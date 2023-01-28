@@ -190,6 +190,75 @@
     <ClInclude Include="src\platform\services\window.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\platform\services\impl\win32_filesystem.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\core\defs.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\core\math.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\dependencies\wgl.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\extensions\filesystem_extensions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\extensions\matrix_extensions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\extensions\platform_extensions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\extensions\renderer_extensions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\extensions\vector_extensions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\models\image.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\models\matrix.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\models\point.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\models\vector.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\models\viewport.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\models\window_event.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\services\impl\opengl_renderer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\services\impl\win32_filesystem.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\services\impl\win32_platform.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\services\impl\win32_window.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\services\filesystem.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\services\platform.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\services\renderer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\services\window.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\game\game.cpp" />
@@ -200,6 +269,13 @@
     <ClCompile Include="src\platform\services\impl\win32_window.cpp" />
     <ClCompile Include="src\thirdparty\glad\glad.c" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\platform\services\impl\win32_filesystem.cpp" />
+    <ClCompile Include="platform\dependencies\wgl.cpp" />
+    <ClCompile Include="platform\extensions\filesystem_extensions.cpp" />
+    <ClCompile Include="platform\services\impl\opengl_renderer.cpp" />
+    <ClCompile Include="platform\services\impl\win32_filesystem.cpp" />
+    <ClCompile Include="platform\services\impl\win32_platform.cpp" />
+    <ClCompile Include="platform\services\impl\win32_window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

@@ -27,26 +27,26 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -163,6 +163,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="platform\core\defs.hpp" />
+    <ClInclude Include="platform\core\math.hpp" />
+    <ClInclude Include="platform\dependencies\wgl.hpp" />
+    <ClInclude Include="platform\extensions\filesystem_extensions.hpp" />
+    <ClInclude Include="platform\extensions\matrix_extensions.hpp" />
+    <ClInclude Include="platform\extensions\platform_extensions.hpp" />
+    <ClInclude Include="platform\extensions\renderer_extensions.hpp" />
+    <ClInclude Include="platform\extensions\vector_extensions.hpp" />
+    <ClInclude Include="platform\models\image.hpp" />
+    <ClInclude Include="platform\models\matrix.hpp" />
+    <ClInclude Include="platform\models\point.hpp" />
+    <ClInclude Include="platform\models\vector.hpp" />
+    <ClInclude Include="platform\models\viewport.hpp" />
+    <ClInclude Include="platform\models\window_event.hpp" />
+    <ClInclude Include="platform\services\filesystem.hpp" />
+    <ClInclude Include="platform\services\impl\opengl_renderer.hpp" />
+    <ClInclude Include="platform\services\impl\win32_filesystem.hpp" />
+    <ClInclude Include="platform\services\impl\win32_platform.hpp" />
+    <ClInclude Include="platform\services\impl\win32_window.hpp" />
+    <ClInclude Include="platform\services\platform.hpp" />
+    <ClInclude Include="platform\services\renderer.hpp" />
+    <ClInclude Include="platform\services\window.hpp" />
     <ClInclude Include="src\assets.hpp" />
     <ClInclude Include="src\core\allocator.hpp" />
     <ClInclude Include="src\core\buffer.hpp" />
@@ -206,6 +228,7 @@
     <ClInclude Include="src\platform\render_device.hpp" />
     <ClInclude Include="src\platform\services\filesystem.hpp" />
     <ClInclude Include="src\platform\services\impl\opengl_renderer.hpp" />
+    <ClInclude Include="src\platform\services\impl\win32_filesystem.hpp" />
     <ClInclude Include="src\platform\services\impl\win32_platform.hpp" />
     <ClInclude Include="src\platform\services\impl\win32_window.hpp" />
     <ClInclude Include="src\platform\services\platform.hpp" />
@@ -226,11 +249,18 @@
     <ClInclude Include="src\win32\win32_window.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="platform\dependencies\wgl.cpp" />
+    <ClCompile Include="platform\extensions\filesystem_extensions.cpp" />
+    <ClCompile Include="platform\services\impl\opengl_renderer.cpp" />
+    <ClCompile Include="platform\services\impl\win32_filesystem.cpp" />
+    <ClCompile Include="platform\services\impl\win32_platform.cpp" />
+    <ClCompile Include="platform\services\impl\win32_window.cpp" />
     <ClCompile Include="src\game\game.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\platform\dependencies\wgl.cpp" />
     <ClCompile Include="src\platform\extensions\filesystem_extensions.cpp" />
     <ClCompile Include="src\platform\services\impl\opengl_renderer.cpp" />
+    <ClCompile Include="src\platform\services\impl\win32_filesystem.cpp" />
     <ClCompile Include="src\platform\services\impl\win32_platform.cpp" />
     <ClCompile Include="src\platform\services\impl\win32_window.cpp" />
     <ClCompile Include="src\thirdparty\glad\glad.c" />
