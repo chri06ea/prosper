@@ -1,57 +1,37 @@
+#pragma once
 #include "../renderer.hpp"
-
 namespace lib
 {
-	class OpenGL : public IRenderer
+	class OpenGLRenderer : public IRenderer
 	{
 	public:
-		OpenGL();
+		OpenGLRenderer();
 
-		virtual VAO create_vao() override;
+		virtual void begin_setup() override;
+		virtual void end_setup() override;
 
-		virtual void bind_vao(VAO vao) override;
+		virtual unsigned int create_vertex_buffer(size_t size, bool constant = false, const void* initial_data = nullptr) override;
+		virtual void write_vertex_buffer(unsigned int vbo, const void* data, size_t data_size) override;
+		virtual void bind_vertex_buffer(unsigned int vbo) override;
 
-		virtual VBO create_vertex_buffer(size_t size, const GPUBufferOptions& options = {}) override;
+		virtual unsigned int create_index_buffer(size_t size, bool constant = false, const void* initial_data = nullptr) override;
+		virtual void write_index_buffer(unsigned int ibo, const void* data, size_t data_size) override;
+		virtual void bind_index_buffer(unsigned int ibo) override;
 
-		virtual EBO create_index_buffer(size_t size, const GPUBufferOptions& options = {}) override;
+		virtual ShaderHandle create_shader(const String& vertex_shader_source, const String& fragment_shader_source, const ShaderAttributes& attributes) override;
+		void setup_shader_attributes(const lib::ShaderAttributes& attributes);
+		virtual void use_shader(ShaderHandle shader) override;
 
-		virtual void bind_buffer(GPUBufferType type, GPUBufferHandle buffer) override;
+		virtual TextureHandle create_texture(const void* data, int width, int height) override;
+		virtual void bind_texture(TextureHandle texture_handle) override;
 
-		virtual void unbind_buffer(GPUBufferType type) override;
-
-		virtual void write_buffer(GPUBufferType type, GPUBufferHandle buffer, const void* data, size_t size) override;
-
-		virtual void draw_elements(GPUElementType type, size_t indices_count) override;
-
-		virtual const Viewport& get_viewport() const override;
+		virtual void draw_indexed(size_t indices_count) override;
 
 		virtual void set_viewport(const Viewport& viewport) override;
 
-		virtual const Shader create_shader(const String& vertex_shader_source, const String& fragment_shader_source) override;
-
-		virtual void use_shader(const Shader& shader) override;
-
-		virtual GPUTextureHandle load_texture(const void* data, int width, int height, int num_channels) override;
-
-		virtual void set_vertex_attribute(size_t index, GPUTypeId type_id, size_t num_types) override;
-
-
-	private:
-
-		Viewport _viewport{};
-		
-		struct VertexAttributeData
-		{
-			GPUTypeId type_id;
-			size_t num_types;
-		};
-
-		std::unordered_map<size_t, VertexAttributeData> _vertex_attributes;
-
-		// Inherited via RenderDevice
 		virtual void clear(float r, float g, float b, float a) override;
 
-		// Inherited via RenderDevice
-		virtual void bind_texture(GPUTextureHandle background_texture) override;
+	private:
+		unsigned int _vao{};
 	};
 }

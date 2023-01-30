@@ -79,7 +79,7 @@ namespace lib
 	//	}
 
 	//	DECLARE_ATTRIBUTE(int, health);
-	//	DECLARE_ATTRIBUTE(Vector, position);
+	//	DECLARE_ATTRIBUTE(Vector3, position);
 
 	//private:
 

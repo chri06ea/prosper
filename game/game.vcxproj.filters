@@ -15,33 +15,51 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="extensions\extensions.hpp">
+    <ClInclude Include="ignore\extensions\extensions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="extensions\gamestate_extensions.hpp">
+    <ClInclude Include="ignore\extensions\gamestate_extensions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="extensions\renderstate_extensions.hpp">
+    <ClInclude Include="ignore\extensions\renderstate_extensions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="models\enginestate.hpp">
+    <ClInclude Include="engine\enginestate.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="models\gamestate.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="models\renderstate.hpp">
+    <ClInclude Include="engine\renderstate.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="game.hpp">
+    <ClInclude Include="services\game.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="assets\assets.hpp">
+    <ClInclude Include="ignore\assets\assets.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="services\game_renderer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="services\impl\topdownsim_game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="services\impl\orthographic_game_renderer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="models\ecs.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="models\entity_list.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="game.cpp">
+    <ClCompile Include="services\impl\topdownsim_game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="services\impl\orthographic_game_renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -57,9 +57,6 @@
     <ClInclude Include="models\window_event.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="services\impl\opengl_renderer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="services\impl\win32_filesystem.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -90,15 +87,27 @@
     <ClInclude Include="thirdparty\stb\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="models\renderdata.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\memory.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="models\buffer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="services\graphics.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="services\impl\opengl_renderer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dependencies\wgl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="extensions\filesystem_extensions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="services\impl\opengl_renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="services\impl\win32_filesystem.cpp">
@@ -111,6 +120,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="thirdparty\glad\glad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="services\impl\opengl_renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

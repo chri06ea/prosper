@@ -1,7 +1,7 @@
 # Build folder
 
 /build/*
-*x64/*
+*/x64/*
 *debug/
 
 /.vs/

@@ -8,6 +8,7 @@ namespace lib
 	class Win32Window : public IWindow
 	{
 	public:
+		Win32Window(const char* title, WindowEventHandler callback);
 
 		Win32Window(void* context_handle);
 

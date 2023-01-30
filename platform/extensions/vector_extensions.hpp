@@ -4,7 +4,7 @@
 
 namespace lib
 {
-	using V3 = Vector;
+	using V3 = Vector3;
 
 	constexpr auto operator+(const V3& lhs, const V3& rhs)
 	{

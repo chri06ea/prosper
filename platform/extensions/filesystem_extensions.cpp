@@ -1,10 +1,14 @@
 #include "filesystem_extensions.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include <thirdparty/stb/stb_image.h>
+#include <platform/thirdparty/stb/stb_image.h>
 
 namespace lib
 {
+	Image get_image(IFileSystem& filesystem, const String& path)
+	{
+		return *load_image(filesystem,path);
+	}
 	Optional<Image> load_image(IFileSystem& filesystem, const String& path)
 	{
 		Image image;

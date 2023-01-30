@@ -2,48 +2,67 @@
 
 #include <platform/core/defs.hpp>
 #include <platform/models/viewport.hpp>
+#include <platform/models/renderdata.hpp>
 
 namespace lib
 {
-	struct RenderData
+	enum class GPUBufferType
 	{
-		List<float> vertices;
-		List<int> indices;
+		Unknown,
+		VAO,
+		VBO,
+		EBO,
 	};
+
+	struct GPUBufferOptions
+	{
+		// Buffer contents stays constant
+		bool constant{};
+
+		void* initial_data{};
+	};
+
+	using ShaderHandle = unsigned int;
+	using BufferHandle = unsigned int;
+	using TextureHandle = unsigned int;
+	using ObjectHandle = unsigned int;
+
+	using VAO = unsigned int;
+	using VBO = unsigned int;
+	using EBO = unsigned int;
+
+	struct ShaderAttribute
+	{
+		TypeId type{};
+		size_t count{};
+	};
+
+	using ShaderAttributes = ShaderAttribute[16];
 
 	class IRenderer
 	{
 	public:
+	
+		virtual void begin_setup() = 0;
+		virtual void end_setup() = 0;
 
-		virtual VAO create_vao() = 0;
+		virtual unsigned int create_vertex_buffer(size_t size, bool constant = false, const void* initial_data = nullptr) = 0;
+		virtual void write_vertex_buffer(unsigned int vbo, const void* data, size_t data_size) = 0;
+		virtual void bind_vertex_buffer(unsigned int vbo) = 0;
 
-		virtual void bind_vao(VAO vao) = 0;
+		virtual unsigned int create_index_buffer(size_t size, bool constant = false, const void* initial_data = nullptr) = 0;
+		virtual void write_index_buffer(unsigned int ibo, const void* data, size_t data_size) = 0;
+		virtual void bind_index_buffer(unsigned int ibo) = 0;
 
-		virtual VBO create_vertex_buffer(size_t size, const GPUBufferOptions& options = {}) = 0;
+		virtual ShaderHandle create_shader(const String& vertex_shader_source, const String& fragment_shader_source, const ShaderAttributes& attributes) = 0;
+		virtual void use_shader(ShaderHandle shader) = 0;
 
-		virtual EBO create_index_buffer(size_t size, const GPUBufferOptions& options = {}) = 0;
+		virtual TextureHandle create_texture(const void* data, int width, int height) = 0;
+		virtual void bind_texture(TextureHandle texture_handle) = 0;
 
-		virtual void bind_buffer(GPUBufferType type, GPUBufferHandle gpu_buffer_handle) = 0;
+		virtual void draw_indexed(size_t indices_count) = 0;
 
-		virtual void unbind_buffer(GPUBufferType type) = 0;
-
-		virtual void write_buffer(GPUBufferType type, GPUBufferHandle gpu_buffer_handle, const void* buffer, size_t size) = 0;
-
-		virtual void draw_elements(GPUElementType type, size_t indices_count) = 0;
-
-		virtual const Viewport& get_viewport() const = 0;
-
-		virtual void set_viewport(const Viewport&) = 0;
-
-		virtual const Shader create_shader(const String& vertex_shader_source, const String& fragment_shader_source) = 0;
-
-		virtual void use_shader(const Shader& shader) = 0;
-
-		virtual GPUTextureHandle load_texture(const void* data, int width, int height, int num_channels) = 0;
-
-		virtual void bind_texture(GPUTextureHandle background_texture) = 0;
-
-		virtual void set_vertex_attribute(size_t index, GPUTypeId type_id, size_t num_types) = 0;
+		virtual void set_viewport(const Viewport& viewport) = 0;
 
 		virtual void clear(float r, float g, float b, float a) = 0;
 	};

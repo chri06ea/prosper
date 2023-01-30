@@ -1,27 +1,26 @@
 #include <iostream>
-#include <game/game.hpp>
 
 #include <platform/services/impl/win32_platform.hpp>
 #include <platform/services/impl/win32_filesystem.hpp>
 #include <platform/services/impl/win32_window.hpp>
 #include <platform/services/impl/opengl_renderer.hpp>
 
-using namespace lib;
+#include <game/services/impl/topdownsim_game.h>
+#include <game/services/impl/orthographic_game_renderer.hpp>
 
-RenderState rs;
-EngineState es;
-GameState gs;
+using namespace lib;
+GameState gamestate;
 
 int main()
 {
 	auto platform = Win32Platform();
 	auto filesystem = Win32FileSystem();
-	auto window = Win32WindowFactory().create([](auto event){});
+	auto window = Win32Window("Dev", [](auto event) {});
+	window.init_graphics();
 
-	window->init_graphics();
+	auto renderer = OpenGLRenderer();
+	auto orthographic_game_renderer = OrthographicGameRenderer(renderer, filesystem);
+	auto game = TopdownSim(orthographic_game_renderer, platform, filesystem, window, gamestate);
 
-	auto renderer = OpenGL();
-
-	Game game(platform, filesystem, *window, renderer);
-	game.main(gs, es, rs);
+	game.run();
 }

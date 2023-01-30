@@ -12,124 +12,77 @@
     }
 #endif
 
+auto _typeid_glid = [](TypeId id)
+{
+	switch(id)
+	{
+		case TypeId::Float:
+		{
+			return GL_FLOAT;
+		}
+		default: CRITICAL_ERROR("Invalid element type");
+	};
+};
+
 namespace lib
 {
-	OpenGL::OpenGL()
+	OpenGLRenderer::OpenGLRenderer()
 	{
 		if(!gladLoadGL())
 			CRITICAL_ERROR("Glad init failed");
+
+		GL_CALL(glGenVertexArrays(1, &_vao));
 	}
 
-	VAO OpenGL::create_vao()
+	void OpenGLRenderer::begin_setup()
 	{
-		VAO vao;
-		GL_CALL(glGenVertexArrays(1, &vao));
-		bind_vao(vao);
-		return vao;
+		GL_CALL(glBindVertexArray(_vao));
 	}
 
-	void OpenGL::bind_vao(VAO vao)
+	void OpenGLRenderer::end_setup()
 	{
-		GL_CALL(glBindVertexArray(vao));
+		GL_CALL(glBindVertexArray(0));
 	}
 
-	VBO OpenGL::create_vertex_buffer(size_t size, const GPUBufferOptions& options)
+	unsigned int OpenGLRenderer::create_vertex_buffer(size_t size, bool constant, const void* initial_data)
 	{
 		VBO vbo;
-		GL_CALL(glGenBuffers(1, &vbo));
-		GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
-		GL_CALL(glBufferData(GL_ARRAY_BUFFER, size, options.initial_data, options.constant ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW));
+		glGenBuffers(1, &vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, size, initial_data, constant ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 		return vbo;
 	}
 
-	EBO OpenGL::create_index_buffer(size_t size, const GPUBufferOptions& options)
+	void OpenGLRenderer::write_vertex_buffer(unsigned int vbo, const void* data, size_t data_size)
 	{
-		EBO ebo;
-		GL_CALL(glGenBuffers(1, &ebo));
-		GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo));
-		GL_CALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, options.initial_data, options.constant ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW));
-		return ebo;
+		GL_CALL(glBufferSubData(GL_ARRAY_BUFFER, 0, (GLsizei) data_size, data));
 	}
 
-	void OpenGL::bind_buffer(GPUBufferType type, GPUBufferHandle buffer)
+	void OpenGLRenderer::bind_vertex_buffer(unsigned int vbo)
 	{
-		uint16_t gl_buffer_type{};
-
-		switch(type)
-		{
-			case GPUBufferType::VBO:
-			{
-				gl_buffer_type = GL_ARRAY_BUFFER;
-				break;
-			}
-			case GPUBufferType::EBO:
-			{
-				gl_buffer_type = GL_ELEMENT_ARRAY_BUFFER;
-				break;
-			}
-			default: CRITICAL_ERROR("Invalid buffer type");
-		}
-
-		GL_CALL(glBindBuffer(gl_buffer_type, buffer));
+		GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
 	}
 
-	void OpenGL::unbind_buffer(GPUBufferType type)
+	unsigned int OpenGLRenderer::create_index_buffer(size_t size, bool constant, const void* initial_data)
 	{
-		bind_buffer(type, 0);
+		EBO ibo;
+		glGenBuffers(1, &ibo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, initial_data, constant ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+		return ibo;
 	}
 
-	void OpenGL::write_buffer(GPUBufferType type, GPUBufferHandle buffer, const void* data, size_t size)
+	void OpenGLRenderer::write_index_buffer(unsigned int ibo, const void* data, size_t data_size)
 	{
-		uint16_t gl_buffer_type{};
-
-		switch(type)
-		{
-			case GPUBufferType::VBO:
-			{
-				gl_buffer_type = GL_ARRAY_BUFFER;
-				break;
-			}
-			case GPUBufferType::EBO:
-			{
-				gl_buffer_type = GL_ELEMENT_ARRAY_BUFFER;
-				break;
-			}
-			default: CRITICAL_ERROR("Invalid buffer type");
-		};
-
-		GL_CALL(glBufferSubData(gl_buffer_type, 0, (GLsizei) size, data));
+		GL_CALL(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, (GLsizei) data_size, data));
 	}
 
-	void OpenGL::draw_elements(GPUElementType type, size_t indices_count)
+	void OpenGLRenderer::bind_index_buffer(unsigned int ibo)
 	{
-		uint16_t gl_element_type{};
-
-		switch(type)
-		{
-			case GPUElementType::Triangle:
-			{
-				gl_element_type = GL_TRIANGLES;
-				break;
-			}
-			default: CRITICAL_ERROR("Invalid element type");
-		};
-
-		GL_CALL(glDrawElements(gl_element_type, (GLsizei) indices_count, GL_UNSIGNED_INT, 0));
+		GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
 	}
 
-	const Viewport& OpenGL::get_viewport() const
-	{
-		return _viewport;
-	}
-
-	void OpenGL::set_viewport(const Viewport& viewport)
-	{
-		_viewport = viewport;
-
-		GL_CALL(glViewport(viewport.x, viewport.y, viewport.w, viewport.h));
-	}
-
-	const Shader OpenGL::create_shader(const String& vertex_shader_source, const String& fragment_shader_source)
+	ShaderHandle OpenGLRenderer::create_shader(const String& vertex_shader_source, const String& fragment_shader_source, const ShaderAttributes& attributes)
 	{
 		auto _compile_shader = [](std::string_view shader_source, std::string_view shader_type)
 		{
@@ -177,20 +130,50 @@ namespace lib
 		// delete the shaders as they're linked into our program now and no longer necessary
 		GL_CALL(glDeleteShader(vertex_shader));
 		GL_CALL(glDeleteShader(fragment_shader));
+
+		setup_shader_attributes(attributes);
+
 		return {program};
 	}
 
-	void OpenGL::use_shader(const Shader& shader)
+	void OpenGLRenderer::setup_shader_attributes(const lib::ShaderAttributes& attributes)
+	{
+		size_t stride{};
+
+		for(const auto& attribute : attributes)
+		{
+			if(!attribute.count)
+				break;
+
+			stride += typeid_size(attribute.type) * attribute.count;
+		}
+
+		size_t offset{}, index{};
+
+		for(const auto& attribute : attributes)
+		{
+			if(!attribute.count)
+				break;
+
+			GL_CALL(glEnableVertexAttribArray(index));
+			GL_CALL(glVertexAttribPointer(index, (GLuint) attribute.count, _typeid_glid(attribute.type), GL_FALSE, (GLuint) stride, (const void*) offset));
+
+			offset += attribute.count * typeid_size(attribute.type);
+			index++;
+		}
+	}
+
+	void OpenGLRenderer::use_shader(ShaderHandle shader)
 	{
 		glUseProgram(shader);
 	}
 
-	GPUTextureHandle OpenGL::load_texture(const void* data, int width, int height, int num_channels)
+	TextureHandle OpenGLRenderer::create_texture(const void* data, int width, int height)
 	{
 		// Generate and bind texture
-		unsigned int background_texture;
-		GL_CALL(glGenTextures(1, &background_texture));
-		GL_CALL(glBindTexture(GL_TEXTURE_2D, background_texture));
+		unsigned int texture;
+		GL_CALL(glGenTextures(1, &texture));
+		GL_CALL(glBindTexture(GL_TEXTURE_2D, texture));
 		// set the texture wrapping/filtering options (on the currently bound texture object)
 		GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
 		GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
@@ -199,73 +182,32 @@ namespace lib
 		// generate the texture (and mipmap)
 		GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data));
 		GL_CALL(glGenerateMipmap(GL_TEXTURE_2D));
-		return background_texture;
+		return texture;
 	}
 
-	void OpenGL::set_vertex_attribute(size_t index, GPUTypeId type_id, size_t num_types)
+	void OpenGLRenderer::bind_texture(TextureHandle texture_handle)
 	{
-		_vertex_attributes[index] = {type_id, num_types};
+		GL_CALL(glBindTexture(GL_TEXTURE_2D, texture_handle));
 
-		// Calculate stride
-
-		size_t stride{};
-
-		for(auto index = 0u; index < _vertex_attributes.size(); index++)
-		{
-			const auto& vertex_attribute = _vertex_attributes[index];
-
-			size_t type_size{};
-
-			switch(vertex_attribute.type_id)
-			{
-				case GPUTypeId::Float:
-				{
-					type_size = sizeof(float);
-					break;
-				}
-				default: CRITICAL_ERROR("Invalid GPUTypeId");
-			};
-
-			stride += type_size * vertex_attribute.num_types;
-		}
-
-		// Set all stored attributes
-
-		size_t offset{};
-
-		for(auto index = 0u; index < _vertex_attributes.size(); index++)
-		{
-			const auto& vertex_attribute = _vertex_attributes[index];
-
-			uint16_t gl_type_id{};
-			size_t type_size{};
-
-			switch(vertex_attribute.type_id)
-			{
-				case GPUTypeId::Float:
-				{
-					gl_type_id = GL_FLOAT;
-					type_size = sizeof(float);
-					break;
-				}
-				default: CRITICAL_ERROR("Invalid element type");
-			};
-
-			GL_CALL(glEnableVertexAttribArray(index));
-			GL_CALL(glVertexAttribPointer(index, (GLuint) vertex_attribute.num_types, gl_type_id, GL_FALSE, (GLuint) stride, (const void*) offset));
-
-			offset += vertex_attribute.num_types * type_size;
-		}
 	}
 
-	void OpenGL::clear(float r, float g, float b, float a)
+	void OpenGLRenderer::draw_indexed(size_t indices_count)
+	{
+		//Move when more than 1 vao needed
+		glBindVertexArray(_vao);
+
+		GL_CALL(glDrawElements(GL_TRIANGLES, (GLsizei) indices_count, GL_UNSIGNED_INT, 0));
+	}
+
+	void OpenGLRenderer::set_viewport(const Viewport& viewport)
+	{
+		GL_CALL(glViewport(viewport.x, viewport.y, viewport.w, viewport.h));
+	}
+
+	void OpenGLRenderer::clear(float r, float g, float b, float a)
 	{
 		GL_CALL(glClearColor(r, g, b, a));
 
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
-	void OpenGL::bind_texture(GPUTextureHandle background_texture)
-	{
-		GL_CALL(glBindTexture(GL_TEXTURE_2D, background_texture));
-	}
-};
+}

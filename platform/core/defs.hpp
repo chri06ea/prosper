@@ -8,11 +8,15 @@
 #include <optional>
 #include <limits>
 
+
+#include "memory.hpp"
+
 #ifndef RELEASE
 #include <iostream>
 #define FAIL_WITH_ERROR(x)              \
 {                                       \
  std::cout << x << std::endl;           \
+ throw;									\
 }            
 #endif
 
@@ -59,7 +63,7 @@ using Shared = std::shared_ptr<T>;
 
 template<typename T, typename... Args>
 inline Shared<T> make_shared(Args&&... args) {
-    return std::make_shared<T>(std::forward<Args>(args)...);
+	return std::make_shared<T>(std::forward<Args>(args)...);
 }
 
 #define DECLARE_ABSTRACT_FACTORY(x, ...)							\
@@ -70,43 +74,24 @@ public:																\
 	virtual Shared<##x> create(__VA_ARGS__) = 0;					\
 };																	\
 
-using VAO = unsigned int;
-using VBO = unsigned int;
-using EBO = unsigned int;
 
-using Handle = unsigned int;
-
-enum class GPUBufferType
+enum class TypeId
 {
-	Unknown,
-	VAO,
-	VBO,
-	EBO,
-};
-
-enum class GPUTypeId
-{
+	None,
 	Float
 };
 
-struct GPUBufferOptions
+static inline auto typeid_size = [](TypeId id)
 {
-	// Buffer contents stays constant
-	bool constant{};
-
-	void* initial_data{};
+	switch(id)
+	{
+		case TypeId::Float:
+		{
+			return sizeof(float);
+		}
+		default: CRITICAL_ERROR("Invalid element type");
+	};
 };
-
-using GPUBufferHandle = unsigned int;
-using GPUTextureHandle = unsigned int;
-
-enum class GPUElementType
-{
-	Triangle
-};
-
-using Shader = unsigned int;
-
 
 // Constexpr sqrt
 //  https://stackoverflow.com/a/34134071

@@ -19,17 +19,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="assets\assets.hpp" />
-    <ClInclude Include="extensions\extensions.hpp" />
-    <ClInclude Include="extensions\gamestate_extensions.hpp" />
-    <ClInclude Include="extensions\renderstate_extensions.hpp" />
-    <ClInclude Include="game.hpp" />
-    <ClInclude Include="models\enginestate.hpp" />
+    <ClInclude Include="ignore\assets\assets.hpp" />
+    <ClInclude Include="models\ecs.hpp" />
+    <ClInclude Include="models\entity_list.hpp" />
+    <ClInclude Include="services\game_renderer.hpp" />
+    <ClInclude Include="ignore\extensions\extensions.hpp" />
+    <ClInclude Include="ignore\extensions\gamestate_extensions.hpp" />
+    <ClInclude Include="ignore\extensions\renderstate_extensions.hpp" />
+    <ClInclude Include="services\game.hpp" />
+    <ClInclude Include="engine\enginestate.hpp" />
     <ClInclude Include="models\gamestate.hpp" />
-    <ClInclude Include="models\renderstate.hpp" />
+    <ClInclude Include="engine\renderstate.hpp" />
+    <ClInclude Include="services\impl\orthographic_game_renderer.hpp" />
+    <ClInclude Include="services\impl\topdownsim_game.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="game.cpp" />
+    <ClCompile Include="services\impl\orthographic_game_renderer.cpp" />
+    <ClCompile Include="services\impl\topdownsim_game.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\platform\Project1.vcxproj">

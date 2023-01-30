@@ -150,19 +150,23 @@
   <ItemGroup>
     <ClInclude Include="core\defs.hpp" />
     <ClInclude Include="core\math.hpp" />
+    <ClInclude Include="core\memory.hpp" />
     <ClInclude Include="dependencies\wgl.hpp" />
     <ClInclude Include="extensions\filesystem_extensions.hpp" />
     <ClInclude Include="extensions\matrix_extensions.hpp" />
     <ClInclude Include="extensions\platform_extensions.hpp" />
     <ClInclude Include="extensions\renderer_extensions.hpp" />
     <ClInclude Include="extensions\vector_extensions.hpp" />
+    <ClInclude Include="models\buffer.hpp" />
     <ClInclude Include="models\image.hpp" />
     <ClInclude Include="models\matrix.hpp" />
     <ClInclude Include="models\point.hpp" />
+    <ClInclude Include="models\renderdata.hpp" />
     <ClInclude Include="models\vector.hpp" />
     <ClInclude Include="models\viewport.hpp" />
     <ClInclude Include="models\window_event.hpp" />
     <ClInclude Include="services\filesystem.hpp" />
+    <ClInclude Include="services\graphics.hpp" />
     <ClInclude Include="services\impl\opengl_renderer.hpp" />
     <ClInclude Include="services\impl\win32_filesystem.hpp" />
     <ClInclude Include="services\impl\win32_platform.hpp" />

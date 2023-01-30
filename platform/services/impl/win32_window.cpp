@@ -87,6 +87,13 @@ namespace lib
 		return window_handle;
 	}
 
+	Win32Window::Win32Window(const char* title, WindowEventHandler handler)
+	{
+		auto hwnd = create_window(title, handler);
+		_context_handle = hwnd;
+		ShowWindow(hwnd, SW_SHOW);
+	}
+
 	Win32Window::Win32Window(void* context_handle)
 		: _context_handle(context_handle)
 	{
