@@ -19,6 +19,8 @@ namespace lib
 			IFileSystem& file_system
 		);
 
+		void load_texture(const char* img, unsigned int& texture);
+
 		virtual void render(const GameState&) override;
 
 	private:
@@ -36,7 +38,7 @@ namespace lib
 		EBO _ibo{};
 		ShaderHandle _shader{};
 		size_t _num_vertices{}, _num_indices{}, _num_sprites{}, _num_edges{};
-		TextureHandle _background_texture{};
+		TextureHandle _atlas_texture{};
 
 		using VertexType = float;
 		using IndexType = int32_t;

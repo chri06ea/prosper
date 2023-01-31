@@ -17,14 +17,16 @@ namespace lib
 
 		virtual void run() override;
 
-		void simulate();
-
 	private:
 		IGameRenderer& _game_renderer;
 		IPlatform& _platform;
 		IFileSystem& _filesystem;
 		IWindow& _window;
 		GameState& _gamestate;
+
+		void initialize();
+
+		void simulate();
 
 		size_t current_tick;
 		size_t start_tick;

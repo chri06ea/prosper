@@ -21,6 +21,8 @@ namespace lib
 
 	void TopdownSim::run()
 	{
+		initialize();
+
 		while(true)
 		{
 			_window.process_messages();
@@ -31,13 +33,23 @@ namespace lib
 			if(const auto time_since_simulation = time - last_simulation_time;
 				time_since_simulation >= simulation_interval)
 			{
-				simulate();
+				for(auto entity : _gamestate.entity_list)
+				{
+
+				}
 			}
 
 			_game_renderer.render(_gamestate);
 
 			_window.swap_buffers();
 		}
+	}
+
+	#define add_entity(...) 1
+
+	void TopdownSim::initialize()
+	{
+		add_entity();
 	}
 
 	void TopdownSim::simulate()

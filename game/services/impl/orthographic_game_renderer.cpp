@@ -4,7 +4,6 @@
 
 namespace lib
 {
-
 	const char* glsl_vertex_shader = R"(
 		#version 330 core
 		layout (location = 0) in vec2 a_pos;
@@ -53,12 +52,23 @@ namespace lib
 			{TypeId::Float, 2}
 			});
 
-		auto image = get_image(_file_system, "./wall.jpg");
-		_background_texture = _renderer.create_texture(image.data, image.width, image.height);
-		_renderer.bind_texture(_background_texture);
+		load_texture("./wall.jpg", _atlas_texture);
+
+		_renderer.bind_texture(_atlas_texture);
 
 		_renderer.end_setup();
 	}
+
+	void OrthographicGameRenderer::load_texture(const char* img, unsigned int& texture)
+	{
+		auto image = get_image(_file_system, img);
+		texture = _renderer.create_texture(image.data, image.width, image.height);
+	}
+
+	#define has_position(x) true
+	#define get_position(x) Vector3{}
+	#define has_texture(x) true
+	#define get_texture(x) unsigned int{};
 
 	void OrthographicGameRenderer::render(const GameState& gs)
 	{
@@ -70,10 +80,24 @@ namespace lib
 			_num_sprites = 0;
 		}
 
-
 		// Scene
 		{
-			push_sprite_fullscreen(_background_texture);
+			push_sprite_fullscreen(_atlas_texture);
+
+			for(auto& entity : gs.entity_list)
+			{
+				if(!has_position(entity))
+					continue;
+
+				const auto& pos = get_position(entity);
+
+				if(!has_texture(entity))
+					continue;
+
+				const auto& texture = get_texture(entity);
+
+				push_sprite(pos.x, pos.y);
+			}
 
 			push_sprite(100.f, 100.f);
 

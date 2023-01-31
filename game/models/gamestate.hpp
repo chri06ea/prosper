@@ -39,7 +39,7 @@ namespace lib
 		float simulation_interval{};
 		float simulation_time{};
 
-		EntityList entity_list;
+		EntityList entity_list[100];
 	private:
 	};
 
